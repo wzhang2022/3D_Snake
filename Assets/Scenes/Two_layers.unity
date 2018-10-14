@@ -250,7 +250,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 534669902}
   m_LocalRotation: {x: 0.38268343, y: -0, z: -0, w: 0.92387956}
-  m_LocalPosition: {x: 6, y: 20, z: -30}
+  m_LocalPosition: {x: 6, y: 30, z: -40}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -371,20 +371,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1594805642}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 267f4abb431f7434cadca28f0a707467, type: 3}
+  m_Script: {fileID: 11500000, guid: 1286c82fc13ecfa4f8797d7ecca693dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  direction: {x: 0, y: 1, z: 0}
+  direction: {x: -1, y: 0, z: 0}
   head: {fileID: 1594805642}
   prefab: {fileID: 1137459855221860, guid: 3d3eb448d5a80a04e9de33569778940d, type: 2}
   speed: 0.2
   keyBind:
-    upZ: 119
-    downZ: 115
-    upY: 113
-    downY: 101
-    upX: 100
-    downX: 97
+    upZ: 105
+    downZ: 107
+    upY: 111
+    downY: 117
+    upX: 108
+    downX: 106
 --- !u!65 &1594805644
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -541,7 +541,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1649160686}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -10, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -555,7 +555,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1649160686}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 267f4abb431f7434cadca28f0a707467, type: 3}
+  m_Script: {fileID: 11500000, guid: 1286c82fc13ecfa4f8797d7ecca693dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   direction: {x: 1, y: 0, z: 0}
@@ -563,9 +563,9 @@ MonoBehaviour:
   prefab: {fileID: 1684524527812884, guid: 53ed6717eca982e4b9a703ccf22bc2dc, type: 2}
   speed: 0.2
   keyBind:
-    upZ: 105
-    downZ: 107
-    upY: 111
-    downY: 117
-    upX: 108
-    downX: 106
+    upZ: 119
+    downZ: 115
+    upY: 101
+    downY: 113
+    upX: 100
+    downX: 97
