@@ -4,6 +4,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Controller_Two_layers : MonoBehaviour {
+    public GameObject gameOverMenu;
+    public GameObject player1WinsText;
+    public GameObject player2WinsText;
+    public GameObject tieText;
+
     public Vector3 direction;
     public GameObject head;
     public GameObject prefab;
@@ -25,7 +30,8 @@ public class Controller_Two_layers : MonoBehaviour {
 	void Start () {
         InvokeRepeating("Repeat", 0.5f, speed);
         direction2D = direction;
-	}
+        gameOverMenu.SetActive(false);
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -74,7 +80,25 @@ public class Controller_Two_layers : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-
-        SceneManager.LoadScene(0);
+        bool player1Win = gameObject.name.Contains("1");
+        bool player2Win = gameObject.name.Contains("2");
+        Time.timeScale = 0;
+        // activate the game over menu with the appropriate message
+        // (might not be best way to do this)
+        gameOverMenu.SetActive(true);
+        if (player1Win)
+        {
+            player1WinsText.SetActive(true);
+        }
+        if (player2Win)
+        {
+            player2WinsText.SetActive(true);
+        }
+        if (player1WinsText.activeSelf && player2WinsText.activeSelf)
+        {
+            tieText.SetActive(true);
+            player1WinsText.SetActive(false);
+            player2WinsText.SetActive(false);
+        }
     }
 }
