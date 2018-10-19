@@ -11,7 +11,7 @@ public class Controller_Two_layers : MonoBehaviour {
 
     public Vector3 direction;
     public GameObject head;
-    public GameObject prefab;
+    public GameObject bodyPrefab;
     public float speed = 0.2f;
     [System.Serializable]
     public struct KeyBind {
@@ -74,14 +74,15 @@ public class Controller_Two_layers : MonoBehaviour {
     }
 
     void Move() {
-        GameObject new_object = Instantiate(prefab, head.transform.position, head.transform.rotation);
+        Vector3 oldPosition = head.transform.position;
         head.transform.Translate(direction);
-
+        GameObject new_object = Instantiate(bodyPrefab, oldPosition, head.transform.rotation);
     }
 
-    private void OnTriggerEnter(Collider other) {
-        bool player1Win = gameObject.name.Contains("1");
-        bool player2Win = gameObject.name.Contains("2");
+    private void OnTriggerEnter(Collider c) {
+        Debug.Log(c);
+        bool player2Win = gameObject.name.Contains("1");
+        bool player1Win = gameObject.name.Contains("2");
         Time.timeScale = 0;
         // activate the game over menu with the appropriate message
         // (might not be best way to do this)

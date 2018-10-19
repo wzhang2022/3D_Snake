@@ -667,7 +667,7 @@ MeshCollider:
   m_GameObject: {fileID: 994158429}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Convex: 1
   m_CookingOptions: 14
@@ -997,7 +997,7 @@ MeshCollider:
   m_GameObject: {fileID: 1320361515}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Convex: 1
   m_CookingOptions: 14
@@ -1217,6 +1217,7 @@ GameObject:
   - component: {fileID: 1594805645}
   - component: {fileID: 1594805644}
   - component: {fileID: 1594805643}
+  - component: {fileID: 1594805648}
   m_Layer: 0
   m_Name: Player1_head
   m_TagString: Untagged
@@ -1241,7 +1242,7 @@ MonoBehaviour:
   tieText: {fileID: 364699315}
   direction: {x: -1, y: 0, z: 0}
   head: {fileID: 1594805642}
-  prefab: {fileID: 1137459855221860, guid: 3d3eb448d5a80a04e9de33569778940d, type: 2}
+  bodyPrefab: {fileID: 1137459855221860, guid: 3d3eb448d5a80a04e9de33569778940d, type: 2}
   speed: 0.2
   keyBind:
     upZ: 105
@@ -1316,6 +1317,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1594805648
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1594805642}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1649160686
 GameObject:
   m_ObjectHideFlags: 0
@@ -1328,6 +1344,7 @@ GameObject:
   - component: {fileID: 1649160688}
   - component: {fileID: 1649160687}
   - component: {fileID: 1649160691}
+  - component: {fileID: 1649160692}
   m_Layer: 0
   m_Name: Player2_head
   m_TagString: Untagged
@@ -1418,7 +1435,7 @@ MonoBehaviour:
   tieText: {fileID: 364699315}
   direction: {x: 1, y: 0, z: 0}
   head: {fileID: 1649160686}
-  prefab: {fileID: 1684524527812884, guid: 53ed6717eca982e4b9a703ccf22bc2dc, type: 2}
+  bodyPrefab: {fileID: 1684524527812884, guid: 53ed6717eca982e4b9a703ccf22bc2dc, type: 2}
   speed: 0.2
   keyBind:
     upZ: 119
@@ -1427,6 +1444,21 @@ MonoBehaviour:
     downY: 122
     upX: 100
     downX: 97
+--- !u!54 &1649160692
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1649160686}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &2028049382
 GameObject:
   m_ObjectHideFlags: 0
