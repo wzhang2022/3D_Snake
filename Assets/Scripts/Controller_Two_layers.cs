@@ -17,17 +17,18 @@ public class Controller_Two_layers : MonoBehaviour {
     public struct KeyBind {
         public char upZ;
         public char downZ;
-        public char upY;
-        public char downY;
         public char upX;
         public char downX;
+        public char upY;
+        public char downY;
     }
     public KeyBind keyBind;
 
     private int layer = 0;
     private Vector3 direction2D;
-	// Use this for initialization
-	void Start () {
+    private Vector3 direction_prev;
+    // Use this for initialization
+    void Start () {
         InvokeRepeating("Repeat", 0.5f, speed);
         direction2D = direction;
         gameOverMenu.SetActive(false);
@@ -36,21 +37,21 @@ public class Controller_Two_layers : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         foreach (char c in Input.inputString) {
-            if (c == keyBind.downX && direction != Vector3.right) {
+            if (c == keyBind.downX && direction_prev != Vector3.right) {
                 direction = Vector3.left;
                 direction2D = direction;
-            } else if (c == keyBind.upX && direction != Vector3.left) {
+            } else if (c == keyBind.upX && direction_prev != Vector3.left) {
                 direction = Vector3.right;
                 direction2D = direction;
-            } else if (c == keyBind.downZ && direction != Vector3.forward) {
+            } else if (c == keyBind.downZ && direction_prev != Vector3.forward) {
                 direction = Vector3.back;
                 direction2D = direction;
-            } else if (c == keyBind.upZ && direction != Vector3.back) {
+            } else if (c == keyBind.upZ && direction_prev != Vector3.back) {
                 direction = Vector3.forward;
                 direction2D = direction;
-            } else if (c == keyBind.downY && direction != Vector3.up && layer == 1) {
+            } else if (c == keyBind.downY && direction_prev != Vector3.up && layer == 1) {
                 direction = Vector3.down;
-            } else if (c == keyBind.upY && direction != Vector3.down && layer == 0) {
+            } else if (c == keyBind.upY && direction_prev != Vector3.down && layer == 0) {
                 direction = Vector3.up;
             }
         }
@@ -76,6 +77,7 @@ public class Controller_Two_layers : MonoBehaviour {
     void Move() {
         Vector3 oldPosition = head.transform.position;
         head.transform.Translate(direction);
+        direction_prev = direction;
         GameObject new_object = Instantiate(bodyPrefab, oldPosition, head.transform.rotation);
     }
 
