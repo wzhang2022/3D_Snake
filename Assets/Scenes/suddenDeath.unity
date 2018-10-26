@@ -1026,7 +1026,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1120708751}
   m_Layer: 0
-  m_Name: Walls
+  m_Name: BasicMap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1614,10 +1614,6 @@ MonoBehaviour:
     downX: 106
     upY: 109
     downY: 109
-  gameOverMenu: {fileID: 696390460}
-  player1WinsText: {fileID: 1521604295}
-  player2WinsText: {fileID: 760211610}
-  tieText: {fileID: 364699315}
 --- !u!65 &1594805644
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1806,10 +1802,6 @@ MonoBehaviour:
     downX: 97
     upY: 122
     downY: 122
-  gameOverMenu: {fileID: 696390460}
-  player1WinsText: {fileID: 1521604295}
-  player2WinsText: {fileID: 760211610}
-  tieText: {fileID: 364699315}
 --- !u!54 &1649160692
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1855,6 +1847,14 @@ MonoBehaviour:
   timeStep: 0.2
   player1: {fileID: 1594805643}
   player2: {fileID: 1649160691}
+  gameOverMenu: {fileID: 696390460}
+  player1WinsText: {fileID: 1521604295}
+  player2WinsText: {fileID: 760211610}
+  tieText: {fileID: 364699315}
+  minX: -10
+  maxX: 10
+  minY: -10
+  maxY: 10
 --- !u!4 &1891107136
 Transform:
   m_ObjectHideFlags: 0
