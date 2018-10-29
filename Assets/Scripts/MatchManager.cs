@@ -24,8 +24,8 @@ public class MatchManager : MonoBehaviour
     // Temporary solution - rectangular walls (not responsive to actual wall objects)
     public int minX = -10;
     public int maxX = 10;
-    public int minY = -10;
-    public int maxY = 10;
+    public int minZ = -10;
+    public int maxZ = 10;
 
     // store all game data
     private HashSet<Vector3> playerPositions = new HashSet<Vector3>();
@@ -37,14 +37,25 @@ public class MatchManager : MonoBehaviour
     {
         InvokeRepeating("Repeat", 0.5f, timeStep);
         gameOverMenu.SetActive(false);
-        // Temporary solution - initialize hard-coded walls NEED FIX!!!
-        for (int x = minX-1; x < maxX; x++)
+        // Temporary solution - initialize hard-coded walls
+        for (int x = minX-1; x <= maxX + 1; x++)
         {
-            wallPositions.Add(new Vector3(x, maxY + 1, 0));
-            wallPositions.Add(new Vector3(x, maxY + 1, 1));
-            wallPositions.Add(new Vector3(x, minY - 1, 0));
-            wallPositions.Add(new Vector3(x, minY - 1, 1));
+            wallPositions.Add(new Vector3(x, 0, maxZ + 1));
+            wallPositions.Add(new Vector3(x, 1, maxZ + 1));
+            wallPositions.Add(new Vector3(x, 0, minZ - 1));
+            wallPositions.Add(new Vector3(x, 1, minZ - 1));
         }
+        for (int z = minZ - 1; z <= maxZ + 1; z++)
+        {
+            wallPositions.Add(new Vector3(minX - 1, 0, z));
+            wallPositions.Add(new Vector3(minX - 1, 1, z));
+            wallPositions.Add(new Vector3(maxX + 1, 0, z));
+            wallPositions.Add(new Vector3(maxX + 1, 1, z));
+        }
+        /* foreach (Vector3 i in wallPositions)
+        {
+            Debug.Log(i);
+        } */
         playerPositions.Add(player1.head.transform.position);
         playerPositions.Add(player2.head.transform.position);
     }
@@ -61,6 +72,7 @@ public class MatchManager : MonoBehaviour
         // modify this code for stuff other than gameOver to happen on collision
         Vector3 nextPosition1 = player1.NextMove();
         Vector3 nextPosition2 = player2.NextMove();
+        Debug.Log(nextPosition1);
         
         bool player2Win = playerPositions.Contains(nextPosition1) || wallPositions.Contains(nextPosition1);
         bool player1Win = playerPositions.Contains(nextPosition2) || wallPositions.Contains(nextPosition2);
