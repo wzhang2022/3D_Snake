@@ -19,13 +19,8 @@ public class MatchManager : MonoBehaviour
     public GameObject player2WinsText;
     public GameObject tieText;
 
-    // TODO: create a map class - script that generates walls precisely & returns their locations
-    // public Map map;
-    // Temporary solution - rectangular walls (not responsive to actual wall objects)
-    public int minX = -10;
-    public int maxX = 10;
-    public int minZ = -10;
-    public int maxZ = 10;
+    // TODO: create a generic map class for fancy map selection?/
+    public BasicMap map;
 
     // store all game data
     private HashSet<Vector3> playerPositions = new HashSet<Vector3>();
@@ -37,25 +32,9 @@ public class MatchManager : MonoBehaviour
     {
         InvokeRepeating("Repeat", 0.5f, timeStep);
         gameOverMenu.SetActive(false);
-        // Temporary solution - initialize hard-coded walls
-        for (int x = minX-1; x <= maxX + 1; x++)
-        {
-            wallPositions.Add(new Vector3(x, 0, maxZ + 1));
-            wallPositions.Add(new Vector3(x, 1, maxZ + 1));
-            wallPositions.Add(new Vector3(x, 0, minZ - 1));
-            wallPositions.Add(new Vector3(x, 1, minZ - 1));
-        }
-        for (int z = minZ - 1; z <= maxZ + 1; z++)
-        {
-            wallPositions.Add(new Vector3(minX - 1, 0, z));
-            wallPositions.Add(new Vector3(minX - 1, 1, z));
-            wallPositions.Add(new Vector3(maxX + 1, 0, z));
-            wallPositions.Add(new Vector3(maxX + 1, 1, z));
-        }
-        /* foreach (Vector3 i in wallPositions)
-        {
-            Debug.Log(i);
-        } */
+        // Get wall positions
+        wallPositions = map.getWallPositions();
+
         playerPositions.Add(player1.head.transform.position);
         playerPositions.Add(player2.head.transform.position);
     }
