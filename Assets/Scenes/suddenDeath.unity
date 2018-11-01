@@ -1835,10 +1835,7 @@ MonoBehaviour:
   player1WinsText: {fileID: 1521604295}
   player2WinsText: {fileID: 760211610}
   tieText: {fileID: 364699315}
-  minX: -10
-  maxX: 10
-  minZ: -10
-  maxZ: 10
+  map: {fileID: 1120708752}
 --- !u!4 &1891107136
 Transform:
   m_ObjectHideFlags: 0
