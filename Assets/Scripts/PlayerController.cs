@@ -62,6 +62,13 @@ public class PlayerController : MonoBehaviour {
         {
             return head.transform.position + direction2D;
         }
+        while (body.Count >= length)
+        {
+            GameObject end = (GameObject)body[0];
+            body.RemoveAt(0);
+            manager.playerPositions.Remove(end.transform.position);
+            Destroy(end);
+        }
         return head.transform.position + direction;
     }
 
@@ -93,11 +100,5 @@ public class PlayerController : MonoBehaviour {
         direction_prev = direction;
         GameObject new_object = Instantiate(bodyPrefab, oldPosition, head.transform.rotation);
         body.Add(new_object);
-        if (body.Count >= length) {
-            GameObject end = (GameObject)body[0];
-            body.RemoveAt(0);
-            manager.playerPositions.Remove(end.transform.position);
-            Destroy(end);
-        }
     }
 }

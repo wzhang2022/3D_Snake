@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using System;
 
 // TODO: will add another script "GameManager" for things requiring persisting over scenes, like music, etc.
 public class MatchManager : MonoBehaviour
@@ -40,31 +39,38 @@ public class MatchManager : MonoBehaviour
         playerPositions.Add(player2.head.transform.position);
     }
 
-
     void Repeat()
     {
-        CheckMoves();
-        player1.Move();
-        player2.Move();
-    }
-
-    void CheckMoves()
-    {
-        // modify this code for stuff other than gameOver to happen on collision
         Vector3 nextPosition1 = player1.NextMove();
         Vector3 nextPosition2 = player2.NextMove();
-        Debug.Log(nextPosition1);
-        
-        bool player2Win = playerPositions.Contains(nextPosition1) || wallPositions.Contains(nextPosition1);
-        bool player1Win = playerPositions.Contains(nextPosition2) || wallPositions.Contains(nextPosition2);
         bool headCollision = nextPosition1 == nextPosition2;
-        bool tie = headCollision || (player1Win && player2Win);
+        bool player1Crash = playerPositions.Contains(nextPosition1) || wallPositions.Contains(nextPosition1) || headCollision;
+        bool player2Crash = playerPositions.Contains(nextPosition2) || wallPositions.Contains(nextPosition2) || headCollision;
 
-        playerPositions.Add(nextPosition1);
-        playerPositions.Add(nextPosition2);
+        // CheckMoves();
+        if (player1Crash)
+        {
+            if (player1.length <= 1)
+            {
 
-        // if someone lost, activate game over menu with the appropriate message
-        /*
+            }
+            player1.length--;
+        }
+        else {
+            playerPositions.Add(nextPosition1);
+            player1.Move();
+        }
+        if (player2Crash)
+        {
+            player2.length--;
+        }
+        else {
+            playerPositions.Add(nextPosition2);
+            player2.Move();
+        }
+        bool player1Win = player2Crash && player2.length <= 0;
+        bool player2Win = player1Crash && player1.length <= 0;
+        bool tie = player1Win && player2Win;
         if (player2Win || player1Win || tie)
         {
             Time.timeScale = 0;
@@ -82,7 +88,40 @@ public class MatchManager : MonoBehaviour
                 player2WinsText.SetActive(true);
             }
         }
-        */
-        
+    }
+
+    void CheckMoves()
+    {
+        // modify this code for stuff other than gameOver to happen on collision
+        Vector3 nextPosition1 = player1.NextMove();
+        Vector3 nextPosition2 = player2.NextMove();
+        Debug.Log(nextPosition1);
+
+        bool player2Win = playerPositions.Contains(nextPosition1) || wallPositions.Contains(nextPosition1);
+        bool player1Win = playerPositions.Contains(nextPosition2) || wallPositions.Contains(nextPosition2);
+        bool headCollision = nextPosition1 == nextPosition2;
+        bool tie = headCollision || (player1Win && player2Win);
+
+        playerPositions.Add(nextPosition1);
+        playerPositions.Add(nextPosition2);
+
+        // if someone lost, activate game over menu with the appropriate message
+        /* if (player2Win || player1Win || tie)
+        {
+            Time.timeScale = 0;
+            gameOverMenu.SetActive(true);
+            if (tie)
+            {
+                tieText.SetActive(true);
+            }
+            else if (player1Win)
+            {
+                player1WinsText.SetActive(true);
+            }
+            else if (player2Win)
+            {
+                player2WinsText.SetActive(true);
+            }
+        } */
     }
 }
