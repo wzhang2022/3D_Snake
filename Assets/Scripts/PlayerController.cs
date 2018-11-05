@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour {
     public Vector3 direction;
     public GameObject head;
     public GameObject bodyPrefab;
+    public ArrayList body;
+    public int length = 5;
     [System.Serializable]
     public struct KeyBind {
         public char upZ;
@@ -17,13 +19,17 @@ public class PlayerController : MonoBehaviour {
         public char downY;
     }
     public KeyBind keyBind;
+    public MatchManager manager;
 
     private int layer = 0;
     private Vector3 direction2D;
     private Vector3 direction_prev;
     // Use this for initialization
+
+    
     void Start () {
         direction2D = direction;
+        body = new ArrayList();
     }
 	
 	// Update is called once per frame
@@ -86,5 +92,12 @@ public class PlayerController : MonoBehaviour {
         head.transform.Translate(direction);
         direction_prev = direction;
         GameObject new_object = Instantiate(bodyPrefab, oldPosition, head.transform.rotation);
+        body.Add(new_object);
+        if (body.Count >= length) {
+            GameObject end = (GameObject)body[0];
+            body.RemoveAt(0);
+            manager.playerPositions.Remove(end.transform.position);
+            Destroy(end);
+        }
     }
 }

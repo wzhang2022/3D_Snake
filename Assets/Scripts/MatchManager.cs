@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System;
 
 // TODO: will add another script "GameManager" for things requiring persisting over scenes, like music, etc.
 public class MatchManager : MonoBehaviour
@@ -23,7 +24,7 @@ public class MatchManager : MonoBehaviour
     public BasicMap map;
 
     // store all game data
-    private HashSet<Vector3> playerPositions = new HashSet<Vector3>();
+    public HashSet<Vector3> playerPositions = new HashSet<Vector3>();
     private HashSet<Vector3> wallPositions = new HashSet<Vector3>();
     // HashSet<Vector3> foodPositions = new HashSet<Vector3>();
 
@@ -38,6 +39,7 @@ public class MatchManager : MonoBehaviour
         playerPositions.Add(player1.head.transform.position);
         playerPositions.Add(player2.head.transform.position);
     }
+
 
     void Repeat()
     {
@@ -62,6 +64,7 @@ public class MatchManager : MonoBehaviour
         playerPositions.Add(nextPosition2);
 
         // if someone lost, activate game over menu with the appropriate message
+        /*
         if (player2Win || player1Win || tie)
         {
             Time.timeScale = 0;
@@ -79,5 +82,7 @@ public class MatchManager : MonoBehaviour
                 player2WinsText.SetActive(true);
             }
         }
+        */
+        
     }
 }
