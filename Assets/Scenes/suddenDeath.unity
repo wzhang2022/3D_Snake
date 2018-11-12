@@ -1835,6 +1835,7 @@ MonoBehaviour:
   timeStep: 0.2
   player1: {fileID: 1594805643}
   player2: {fileID: 1649160691}
+  foodPrefab: {fileID: 1684524527812884, guid: 40d75ded267258348a60299068f95d10, type: 2}
   gameOverMenu: {fileID: 696390460}
   player1WinsText: {fileID: 1521604295}
   player2WinsText: {fileID: 760211610}
