@@ -42,7 +42,7 @@ public class BasicMap : MonoBehaviour {
         BackWall.localScale = new Vector3(maxX - minX, 3, 1);
     }
 
-    public HashSet<Vector3> getWallPositions()
+    public HashSet<Vector3> GetWallPositions()
     {
         HashSet<Vector3> wallPositions = new HashSet<Vector3>();
         for (int x = minX; x <= maxX; x++)
@@ -60,6 +60,14 @@ public class BasicMap : MonoBehaviour {
             wallPositions.Add(new Vector3(maxX, 1, z));
         }
         return wallPositions;
+    }
+
+    public Vector3 GetRandomPosition()
+    {
+        int x = Random.Range(minX+1, maxX);
+        int y = Random.Range(0, 2);
+        int z = Random.Range(minZ + 1, maxZ);
+        return new Vector3(x, y, z);
     }
 
     // Update is called once per frame

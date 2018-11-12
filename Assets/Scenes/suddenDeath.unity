@@ -1591,6 +1591,7 @@ MonoBehaviour:
   direction: {x: -1, y: 0, z: 0}
   head: {fileID: 1594805642}
   bodyPrefab: {fileID: 1137459855221860, guid: 3d3eb448d5a80a04e9de33569778940d, type: 2}
+  length: 15
   keyBind:
     upZ: 105
     downZ: 107
@@ -1598,6 +1599,7 @@ MonoBehaviour:
     downX: 106
     upY: 109
     downY: 109
+  manager: {fileID: 1891107135}
 --- !u!65 &1594805644
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1779,6 +1781,7 @@ MonoBehaviour:
   direction: {x: 1, y: 0, z: 0}
   head: {fileID: 1649160686}
   bodyPrefab: {fileID: 1684524527812884, guid: 53ed6717eca982e4b9a703ccf22bc2dc, type: 2}
+  length: 15
   keyBind:
     upZ: 119
     downZ: 115
@@ -1786,6 +1789,7 @@ MonoBehaviour:
     downX: 97
     upY: 122
     downY: 122
+  manager: {fileID: 1891107135}
 --- !u!54 &1649160692
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1831,6 +1835,7 @@ MonoBehaviour:
   timeStep: 0.2
   player1: {fileID: 1594805643}
   player2: {fileID: 1649160691}
+  foodPrefab: {fileID: 1684524527812884, guid: 40d75ded267258348a60299068f95d10, type: 2}
   gameOverMenu: {fileID: 696390460}
   player1WinsText: {fileID: 1521604295}
   player2WinsText: {fileID: 760211610}
