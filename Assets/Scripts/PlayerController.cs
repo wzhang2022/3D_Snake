@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour {
-    public Vector3 direction;
     public GameObject head;
     public GameObject bodyPrefab;
     public ArrayList body;
@@ -21,36 +20,55 @@ public class PlayerController : MonoBehaviour {
     public KeyBind keyBind;
     public MatchManager manager;
 
+    // variables to manage movement
+    public Vector3 direction;
     private int layer = 0;
     private Vector3 direction2D;
+    private Vector3 queuedDirection;
     private Vector3 direction_prev;
-    // Use this for initialization
 
-    
     void Start () {
         direction2D = direction;
+        queuedDirection = direction;
         body = new ArrayList();
     }
 	
-	// Update is called once per frame
+    // process a movement command
+    void MoveCommand(Vector3 c)
+    {
+        // allow direction if it is not in same axis of previous move
+        if (c != -1 * direction_prev && c != direction_prev)
+        {
+            direction = c;
+            // clear queued commands when making valid move
+            queuedDirection = c;
+            // also set 2D direction if this is a planar move
+            if (c.y == 0)
+            {
+                direction2D = direction;
+            }
+        } else
+        {
+            // buffer moves in same axis
+            queuedDirection = c;
+        }
+    }
+
+	// recieve movement commands at every timestep
 	void Update () {
         foreach (char c in Input.inputString) {
-            if (c == keyBind.downX && direction_prev != Vector3.right) {
-                direction = Vector3.left;
-                direction2D = direction;
-            } else if (c == keyBind.upX && direction_prev != Vector3.left) {
-                direction = Vector3.right;
-                direction2D = direction;
-            } else if (c == keyBind.downZ && direction_prev != Vector3.forward) {
-                direction = Vector3.back;
-                direction2D = direction;
-            } else if (c == keyBind.upZ && direction_prev != Vector3.back) {
-                direction = Vector3.forward;
-                direction2D = direction;
-            } else if (c == keyBind.downY && direction_prev != Vector3.up && layer == 1) {
-                direction = Vector3.down;
-            } else if (c == keyBind.upY && direction_prev != Vector3.down && layer == 0) {
-                direction = Vector3.up;
+            if (c == keyBind.downX) {
+                MoveCommand(Vector3.left);
+            } else if (c == keyBind.upX) {
+                MoveCommand(Vector3.right);
+            } else if (c == keyBind.downZ) {
+                MoveCommand(Vector3.back);
+            } else if (c == keyBind.upZ) {
+                MoveCommand(Vector3.forward);
+            } else if (c == keyBind.downY && layer == 1) {
+                MoveCommand(Vector3.down);
+            } else if (c == keyBind.upY && layer == 0) {
+                MoveCommand(Vector3.up);
             }
         }
     }
@@ -100,5 +118,8 @@ public class PlayerController : MonoBehaviour {
         direction_prev = direction;
         GameObject new_object = Instantiate(bodyPrefab, oldPosition, head.transform.rotation);
         body.Add(new_object);
+
+        // auto-load queued moves to allow for tight turns
+        MoveCommand(queuedDirection);
     }
 }

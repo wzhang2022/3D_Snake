@@ -85,10 +85,16 @@ public class MatchManager : MonoBehaviour
         Vector3 nextPosition1 = player1.NextMove();
         Vector3 nextPosition2 = player2.NextMove();
 
-        // handle collisions
+        // detect + handle collisions
         bool headCollision = nextPosition1 == nextPosition2;
         bool player1Crash = playerPositions.Contains(nextPosition1) || wallPositions.Contains(nextPosition1) || headCollision;
         bool player2Crash = playerPositions.Contains(nextPosition2) || wallPositions.Contains(nextPosition2) || headCollision;
+
+        // trigger gameOver if necessary
+        bool player1Win = player2Crash && player2.length <= 1;
+        bool player2Win = player1Crash && player1.length <= 1;
+        bool tie = player1Win && player2Win;
+        gameOver(player1Win, player2Win, tie);
 
         if (player1Crash)
         {
@@ -106,10 +112,6 @@ public class MatchManager : MonoBehaviour
             playerPositions.Add(nextPosition2);
             player2.Move();
         }
-        bool player1Win = player2Crash && player2.length <= 1;
-        bool player2Win = player1Crash && player1.length <= 1;
-        bool tie = player1Win && player2Win;
-        gameOver(player1Win, player2Win, tie);
     }
 
     // function to display the gameover screen
