@@ -22,6 +22,8 @@ public class MatchManager : MonoBehaviour
     // item prefabs
     public GameObject foodPrefab;
     public GameObject powerUpPrefab;
+    public GameObject player1TerritoryPrefab;
+    public GameObject player2TerritoryPrefab;
 
     // game menu objects
     public GameObject timerText;
@@ -34,11 +36,14 @@ public class MatchManager : MonoBehaviour
     public BasicMap map;
 
     // store all game data
-    public HashSet<Vector3> player1Positions = new HashSet<Vector3>();
-    public HashSet<Vector3> player2Positions = new HashSet<Vector3>();
+    private HashSet<Vector3> player1Positions = new HashSet<Vector3>();
+    private HashSet<Vector3> player2Positions = new HashSet<Vector3>();
     private HashSet<Vector3> wallPositions = new HashSet<Vector3>();
     private HashSet<Vector3> foodPositions = new HashSet<Vector3>();
     private HashSet<Vector3> powerUpPositions = new HashSet<Vector3>();
+    private HashSet<Vector3> player1Territory = new HashSet<Vector3>();
+    private HashSet<Vector3> player2Territory = new HashSet<Vector3>();
+
 
     // Initialize everything
     void Start()
@@ -77,7 +82,9 @@ public class MatchManager : MonoBehaviour
             !player2Positions.Contains(position) &&
             !foodPositions.Contains(position) &&
             !powerUpPositions.Contains(position) &&
-            !wallPositions.Contains(position)
+            !wallPositions.Contains(position) &&
+            !player1Territory.Contains(position) &&
+            !player2Territory.Contains(position)
         );
     }
 
@@ -94,7 +101,11 @@ public class MatchManager : MonoBehaviour
     // helper function for hurting a player
     void Hurt(PlayerController player)
     {
-        player.length = player.length - player.length / 2;
+        // lose length unless powered up
+        if (player.powerTurns < 1)
+        {
+            player.length = player.length - player.length / 2;
+        }
     }
 
     // what happens each timestep
@@ -148,13 +159,31 @@ public class MatchManager : MonoBehaviour
             powerUpPositions.Remove(position2);
         }
 
+        // claim territory on powerup end
+        if (player1.powerTurns == 1)
+        {
+            foreach (Vector3 pos in player1Positions)
+            {
+                Instantiate(player1TerritoryPrefab, pos, Quaternion.identity);
+                player1Territory.Add(pos);
+            }
+        }
+        if (player2.powerTurns == 1)
+        {
+            foreach (Vector3 pos in player2Positions)
+            {
+                Instantiate(player2TerritoryPrefab, pos, Quaternion.identity);
+                player2Territory.Add(pos);
+            }
+        }      
+
         Vector3 nextPosition1 = player1.NextMove(player1Positions);
         Vector3 nextPosition2 = player2.NextMove(player2Positions);
 
         // detect + handle collisions
         bool headCollision = nextPosition1 == nextPosition2;
-        bool player1Crash = IsCrash(nextPosition1) || headCollision;
-        bool player2Crash = IsCrash(nextPosition2) || headCollision;
+        bool player1Crash = IsCrash(nextPosition1) || player2Territory.Contains(nextPosition1) || headCollision;
+        bool player2Crash = IsCrash(nextPosition2) || player1Territory.Contains(nextPosition2) || headCollision;
 
         // trigger gameOver if necessary
         bool player1Win = player2Crash && player2.length <= 1;
@@ -164,11 +193,9 @@ public class MatchManager : MonoBehaviour
 
         if (player1Crash)
         {
-            // get hurt unless powered up
-            if (player1.powerTurns < 1)
-            {
-                Hurt(player1);
-            } else if (player2Positions.Contains(nextPosition1))
+            Hurt(player1);
+            // powerUp allow attack opponent's body
+            if (player1.powerTurns > 0 && player2Positions.Contains(nextPosition1))
             {
                 Hurt(player2);
             }
@@ -179,18 +206,16 @@ public class MatchManager : MonoBehaviour
         }
         if (player2Crash)
         {
-            // get hurt unless powered up
-            if (player2.powerTurns < 1)
-            {
-                Hurt(player2);
-            } else if (player1Positions.Contains(nextPosition2))
+            // powerUp allow attack opponent's body
+            Hurt(player2);
+            if (player2.powerTurns > 0 && player1Positions.Contains(nextPosition2))
             {
                 Hurt(player1);
             }
         }
         else {
-            player2Positions.Add(nextPosition2);
-            player2.Move();
+            // player2Positions.Add(nextPosition2);
+            // player2.Move();
         }
     }
 
