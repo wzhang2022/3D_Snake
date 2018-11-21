@@ -9,11 +9,11 @@ EditorBuildSettings:
     path: Assets/Scenes/startScreen.unity
     guid: 4098416c65089584794b3496dacc80b0
   - enabled: 1
-    path: Assets/Scenes/suddenDeath.unity
+    path: Assets/Scenes/foodMatch.unity
     guid: 7df01b793d4bebe45b1cc115bee78aa6
   - enabled: 0
-    path: Assets/Scenes/Two_layers.unity
-    guid: 0c9f1eebb88abd44dad1d7da82ab45b4
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05

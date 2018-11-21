@@ -4,10 +4,16 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour {
+    // prefabs
     public GameObject head;
     public GameObject bodyPrefab;
     public ArrayList body;
+    public Material powerUpMaterial;
+    public Material headMarkerMaterial;
+
+    // state variables
     public int length = 5;
+    public int powerTurns = 0;
     [System.Serializable]
     public struct KeyBind {
         public char upZ;
@@ -18,7 +24,6 @@ public class PlayerController : MonoBehaviour {
         public char downY;
     }
     public KeyBind keyBind;
-    public MatchManager manager;
 
     // variables to manage movement
     public Vector3 direction;
@@ -73,19 +78,33 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    public Vector3 NextMove()
+    public Vector3 NextMove(HashSet<Vector3> playerPositions)
     {
-        if ((direction == Vector3.up && layer == 1) ||
-            (direction == Vector3.down && layer == 0))
+        // decrement powered-up turns (show yellow marker w/ flash at end for visual warning)
+        powerTurns = Mathf.Max(powerTurns - 1, 0);
+        if (powerTurns > 0 && powerTurns != 2)
         {
-            return head.transform.position + direction2D;
+            this.transform.Find("HeadMarker").GetComponent<MeshRenderer>().material = powerUpMaterial;
         }
+        else
+        {
+            this.transform.Find("HeadMarker").GetComponent<MeshRenderer>().material = headMarkerMaterial;
+        }
+
+        // handle length reductions
         while (body.Count >= length)
         {
             GameObject end = (GameObject)body[0];
             body.RemoveAt(0);
-            manager.playerPositions.Remove(end.transform.position);
+            playerPositions.Remove(end.transform.position);
             Destroy(end);
+        }
+
+        // return where the player will go next
+        if ((direction == Vector3.up && layer == 1) ||
+            (direction == Vector3.down && layer == 0))
+        {
+            return head.transform.position + direction2D;
         }
         return head.transform.position + direction;
     }

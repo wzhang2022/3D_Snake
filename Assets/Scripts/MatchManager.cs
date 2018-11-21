@@ -9,16 +9,22 @@ public class MatchManager : MonoBehaviour
     // game constants
     public float timeStep = 0.2f;
     public float foodSpawnRate = .3f;
+    public int maxFood = 30;
+    public float powerUpSpawnRate = .1f;
+    public int maxPowerUp = 1;
+    public int powerUpDuration = 10;
     public int roundLength = 30;
 
     // player controllers - note can generalize into array if we do multiplayer
     public PlayerController player1;
     public PlayerController player2;
 
-    // item prefabas
+    // item prefabs
     public GameObject foodPrefab;
+    public GameObject powerUpPrefab;
 
-    // end game menu objects
+    // game menu objects
+    public GameObject timerText;
     public GameObject gameOverMenu;
     public GameObject player1WinsText;
     public GameObject player2WinsText;
@@ -28,9 +34,11 @@ public class MatchManager : MonoBehaviour
     public BasicMap map;
 
     // store all game data
-    public HashSet<Vector3> playerPositions = new HashSet<Vector3>();
+    public HashSet<Vector3> player1Positions = new HashSet<Vector3>();
+    public HashSet<Vector3> player2Positions = new HashSet<Vector3>();
     private HashSet<Vector3> wallPositions = new HashSet<Vector3>();
     private HashSet<Vector3> foodPositions = new HashSet<Vector3>();
+    private HashSet<Vector3> powerUpPositions = new HashSet<Vector3>();
 
     // Initialize everything
     void Start()
@@ -40,31 +48,77 @@ public class MatchManager : MonoBehaviour
         // Get wall positions
         wallPositions = map.GetWallPositions();
 
-        playerPositions.Add(player1.head.transform.position);
-        playerPositions.Add(player2.head.transform.position);
+        player1Positions.Add(player1.head.transform.position);
+        player2Positions.Add(player2.head.transform.position);
         StartCoroutine(RoundTimer());
     }
 
     IEnumerator RoundTimer()
     {
-        yield return new WaitForSeconds(roundLength);
+        int secondsLeft = roundLength;
+        while (secondsLeft > 0)
+        {
+            timerText.GetComponent<Text>().text = secondsLeft.ToString();
+            yield return new WaitForSeconds(1);
+            secondsLeft--;
+
+        }
         bool player1Win = player1.length > player2.length;
         bool player2Win = player1.length < player2.length;
         bool tie = player1.length == player2.length; ;
-        gameOver(player1Win, player2Win, tie);
+        GameOver(player1Win, player2Win, tie);
+    }
+
+    // helper function for detecting if position is open
+    bool IsOpen(Vector3 position)
+    {
+        return (
+            !player1Positions.Contains(position) &&
+            !player2Positions.Contains(position) &&
+            !foodPositions.Contains(position) &&
+            !powerUpPositions.Contains(position) &&
+            !wallPositions.Contains(position)
+        );
+    }
+
+    // helper function for detecting if position is a crash
+    bool IsCrash(Vector3 position)
+    {
+        return (
+            player1Positions.Contains(position) ||
+            player2Positions.Contains(position) ||
+            wallPositions.Contains(position)
+        );
+    }
+
+    // helper function for hurting a player
+    void Hurt(PlayerController player)
+    {
+        player.length = player.length - player.length / 2;
     }
 
     // what happens each timestep
     void Repeat()
     {
         // spawn new food
-        if (Random.Range(0f, 1f) < foodSpawnRate)
+        int numFood = foodPositions.Count;
+        if (numFood == 0 || Random.Range(0f, 1f) < foodSpawnRate && numFood < maxFood)
         {
             Vector3 foodPosition = map.GetRandomPosition();
-            if (!playerPositions.Contains(foodPosition) && !foodPositions.Contains(foodPosition))
+            if (IsOpen(foodPosition))
             {
                 GameObject newFood = Instantiate(foodPrefab, foodPosition, Quaternion.identity);
                 foodPositions.Add(foodPosition);
+            }
+        }
+        // spawn new powerups - for now only spawn one at a time
+        if (Random.Range(0f, 1f) < powerUpSpawnRate && powerUpPositions.Count < maxPowerUp)
+        {
+            Vector3 powerUpPosition = map.GetRandomPosition();
+            if (IsOpen(powerUpPosition))
+            {
+                GameObject newPowerUp = Instantiate(powerUpPrefab, powerUpPosition, Quaternion.identity);
+                powerUpPositions.Add(powerUpPosition);
             }
         }
 
@@ -82,40 +136,66 @@ public class MatchManager : MonoBehaviour
             foodPositions.Remove(position2);
         }
 
-        Vector3 nextPosition1 = player1.NextMove();
-        Vector3 nextPosition2 = player2.NextMove();
+        // power up consumption
+        if (powerUpPositions.Contains(position1))
+        {
+            player1.powerTurns += powerUpDuration;
+            powerUpPositions.Remove(position1);
+        }
+        if (powerUpPositions.Contains(position2))
+        {
+            player2.powerTurns += powerUpDuration;
+            powerUpPositions.Remove(position2);
+        }
+
+        Vector3 nextPosition1 = player1.NextMove(player1Positions);
+        Vector3 nextPosition2 = player2.NextMove(player2Positions);
 
         // detect + handle collisions
         bool headCollision = nextPosition1 == nextPosition2;
-        bool player1Crash = playerPositions.Contains(nextPosition1) || wallPositions.Contains(nextPosition1) || headCollision;
-        bool player2Crash = playerPositions.Contains(nextPosition2) || wallPositions.Contains(nextPosition2) || headCollision;
+        bool player1Crash = IsCrash(nextPosition1) || headCollision;
+        bool player2Crash = IsCrash(nextPosition2) || headCollision;
 
         // trigger gameOver if necessary
         bool player1Win = player2Crash && player2.length <= 1;
         bool player2Win = player1Crash && player1.length <= 1;
         bool tie = player1Win && player2Win;
-        gameOver(player1Win, player2Win, tie);
+        GameOver(player1Win, player2Win, tie);
 
         if (player1Crash)
         {
-            player1.length -= player1.length / 2;
+            // get hurt unless powered up
+            if (player1.powerTurns < 1)
+            {
+                Hurt(player1);
+            } else if (player2Positions.Contains(nextPosition1))
+            {
+                Hurt(player2);
+            }
         }
         else {
-            playerPositions.Add(nextPosition1);
+            player1Positions.Add(nextPosition1);
             player1.Move();
         }
         if (player2Crash)
         {
-            player2.length -= player2.length / 2;
+            // get hurt unless powered up
+            if (player2.powerTurns < 1)
+            {
+                Hurt(player2);
+            } else if (player1Positions.Contains(nextPosition2))
+            {
+                Hurt(player1);
+            }
         }
         else {
-            playerPositions.Add(nextPosition2);
+            player2Positions.Add(nextPosition2);
             player2.Move();
         }
     }
 
     // function to display the gameover screen
-    void gameOver(bool player1Win, bool player2Win, bool tie)
+    void GameOver(bool player1Win, bool player2Win, bool tie)
     {
         if (player2Win || player1Win || tie)
         {
