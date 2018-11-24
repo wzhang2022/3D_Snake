@@ -25,9 +25,9 @@ public class PlayerController : MonoBehaviour {
     // variables to manage movement
     public Vector3 direction;
     public int layer = 0;
-    private Vector3 direction2D;
-    private Vector3 queuedDirection;
-    private Vector3 direction_prev;
+    public Vector3 direction2D;
+    public Vector3 queuedDirection;
+    public Vector3 direction_prev;
 
     void Start () {
         direction2D = direction;
