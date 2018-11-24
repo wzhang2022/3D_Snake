@@ -215,6 +215,9 @@ public class MatchManager : MonoBehaviour
             }
         }
 
+        player1.DecideMove(player2, wallPositions, foodPositions, powerUpPositions);
+        player2.DecideMove(player1, wallPositions, foodPositions, powerUpPositions);
+
         Vector3 nextPosition1 = player1.NextMove();
         Vector3 nextPosition2 = player2.NextMove();
 

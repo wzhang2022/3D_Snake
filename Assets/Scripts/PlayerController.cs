@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour {
     // data
     public ArrayList body;
     public HashSet<Vector3> positions = new HashSet<Vector3>();
+    // TERRITORY NOT BEING USED RIGHT NOW
     public HashSet<Vector3> territory = new HashSet<Vector3>();
     public HashSet<GameObject> territoryBlocks = new HashSet<GameObject>();
 
@@ -61,14 +62,17 @@ public class PlayerController : MonoBehaviour {
     }
 
     // decide what move to take
-    public virtual void DecideMove()
+    public virtual void DecideMove(
+        PlayerController otherplayer, 
+        HashSet<Vector3> wallPositions, 
+        HashSet<Vector3> foodPositions, 
+        HashSet<Vector3> powerUpPositions)
     {
         return;
     }
 
     public Vector3 NextMove()
     {
-        DecideMove();
         // decrement powered-up turns (show yellow marker w/ flash at end for visual warning)
         powerTurns = Mathf.Max(powerTurns - 1, 0);
         if (powerTurns > 0 && powerTurns != 2)

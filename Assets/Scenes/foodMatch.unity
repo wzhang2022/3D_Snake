@@ -1846,6 +1846,7 @@ GameObject:
   - component: {fileID: 1649160688}
   - component: {fileID: 1649160691}
   - component: {fileID: 1649160692}
+  - component: {fileID: 1649160687}
   - component: {fileID: 1649160693}
   m_Layer: 0
   m_Name: Player2_head
@@ -1854,6 +1855,27 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1649160687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1649160686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55f5f046c2d8ec9419c03a18a9d4a761, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  head: {fileID: 1649160686}
+  bodyPrefab: {fileID: 1684524527812884, guid: 53ed6717eca982e4b9a703ccf22bc2dc, type: 2}
+  powerUpMaterial: {fileID: 2100000, guid: 90f547bcd6b36d548a3d4e5403fd783d, type: 2}
+  headMarkerMaterial: {fileID: 2100000, guid: 4591c98bebdb24d4583d7222a768750d, type: 2}
+  territoryPrefab: {fileID: 1684524527812884, guid: 2dde917855026324db2a1c37933bfb4a,
+    type: 2}
+  length: 5
+  powerTurns: 0
+  direction: {x: 1, y: 0, z: 0}
+  layer: 0
 --- !u!23 &1649160688
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1947,7 +1969,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1649160686}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 470e9995399b2f5429260b6d796fbdd7, type: 3}
   m_Name: 
@@ -2078,7 +2100,7 @@ MonoBehaviour:
   territoryDoubleLayer: 0
   territoryPermanent: 0
   player1: {fileID: 1594805649}
-  player2: {fileID: 1649160693}
+  player2: {fileID: 1649160687}
   foodPrefab: {fileID: 1684524527812884, guid: 40d75ded267258348a60299068f95d10, type: 2}
   powerUpPrefab: {fileID: 1989851686697500, guid: c13d5fbe6e6b25d459c2589b5e587f10,
     type: 2}
