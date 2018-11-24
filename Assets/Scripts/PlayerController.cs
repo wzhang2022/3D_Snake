@@ -7,27 +7,23 @@ public class PlayerController : MonoBehaviour {
     // prefabs
     public GameObject head;
     public GameObject bodyPrefab;
-    public ArrayList body;
     public Material powerUpMaterial;
     public Material headMarkerMaterial;
+    public GameObject territoryPrefab;
+
+    // data
+    public ArrayList body;
+    public HashSet<Vector3> positions = new HashSet<Vector3>();
+    public HashSet<Vector3> territory = new HashSet<Vector3>();
+    public HashSet<GameObject> territoryBlocks = new HashSet<GameObject>();
 
     // state variables
     public int length = 5;
     public int powerTurns = 0;
-    [System.Serializable]
-    public struct KeyBind {
-        public char upZ;
-        public char downZ;
-        public char upX;
-        public char downX;
-        public char upY;
-        public char downY;
-    }
-    public KeyBind keyBind;
 
     // variables to manage movement
     public Vector3 direction;
-    private int layer = 0;
+    public int layer = 0;
     private Vector3 direction2D;
     private Vector3 queuedDirection;
     private Vector3 direction_prev;
@@ -39,7 +35,7 @@ public class PlayerController : MonoBehaviour {
     }
 	
     // process a movement command
-    void MoveCommand(Vector3 c)
+    public void MoveCommand(Vector3 c)
     {
         // allow direction if it is not in same axis of previous move
         if (c != -1 * direction_prev && c != direction_prev)
@@ -60,26 +56,19 @@ public class PlayerController : MonoBehaviour {
     }
 
 	// recieve movement commands at every timestep
-	void Update () {
-        foreach (char c in Input.inputString) {
-            if (c == keyBind.downX) {
-                MoveCommand(Vector3.left);
-            } else if (c == keyBind.upX) {
-                MoveCommand(Vector3.right);
-            } else if (c == keyBind.downZ) {
-                MoveCommand(Vector3.back);
-            } else if (c == keyBind.upZ) {
-                MoveCommand(Vector3.forward);
-            } else if (c == keyBind.downY && layer == 1) {
-                MoveCommand(Vector3.down);
-            } else if (c == keyBind.upY && layer == 0) {
-                MoveCommand(Vector3.up);
-            }
-        }
+	public virtual void Update () {
+        return;
     }
 
-    public Vector3 NextMove(HashSet<Vector3> playerPositions)
+    // decide what move to take
+    public virtual void DecideMove()
     {
+        return;
+    }
+
+    public Vector3 NextMove()
+    {
+        DecideMove();
         // decrement powered-up turns (show yellow marker w/ flash at end for visual warning)
         powerTurns = Mathf.Max(powerTurns - 1, 0);
         if (powerTurns > 0 && powerTurns != 2)
@@ -96,7 +85,7 @@ public class PlayerController : MonoBehaviour {
         {
             GameObject end = (GameObject)body[0];
             body.RemoveAt(0);
-            playerPositions.Remove(end.transform.position);
+            positions.Remove(end.transform.position);
             Destroy(end);
         }
 

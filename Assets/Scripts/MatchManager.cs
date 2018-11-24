@@ -12,8 +12,13 @@ public class MatchManager : MonoBehaviour
     public int maxFood = 30;
     public float powerUpSpawnRate = .1f;
     public int maxPowerUp = 1;
-    public int powerUpDuration = 10;
-    public int roundLength = 30;
+    public int powerUpDuration = 12;
+    public int roundSteps = 300;
+
+    // game mode choice
+    public bool territoryOn = false;
+    public bool territoryDoubleLayer = false;
+    public bool territoryPermanent = false;
 
     // player controllers - note can generalize into array if we do multiplayer
     public PlayerController player1;
@@ -22,8 +27,6 @@ public class MatchManager : MonoBehaviour
     // item prefabs
     public GameObject foodPrefab;
     public GameObject powerUpPrefab;
-    public GameObject player1TerritoryPrefab;
-    public GameObject player2TerritoryPrefab;
 
     // game menu objects
     public GameObject timerText;
@@ -35,15 +38,10 @@ public class MatchManager : MonoBehaviour
     // TODO: create a generic map class for fancy map selection?/
     public BasicMap map;
 
-    // store all game data
-    private HashSet<Vector3> player1Positions = new HashSet<Vector3>();
-    private HashSet<Vector3> player2Positions = new HashSet<Vector3>();
+    // game data
     private HashSet<Vector3> wallPositions = new HashSet<Vector3>();
     private HashSet<Vector3> foodPositions = new HashSet<Vector3>();
     private HashSet<Vector3> powerUpPositions = new HashSet<Vector3>();
-    private HashSet<Vector3> player1Territory = new HashSet<Vector3>();
-    private HashSet<Vector3> player2Territory = new HashSet<Vector3>();
-
 
     // Initialize everything
     void Start()
@@ -53,14 +51,14 @@ public class MatchManager : MonoBehaviour
         // Get wall positions
         wallPositions = map.GetWallPositions();
 
-        player1Positions.Add(player1.head.transform.position);
-        player2Positions.Add(player2.head.transform.position);
+        player1.positions.Add(player1.head.transform.position);
+        player2.positions.Add(player2.head.transform.position);
         StartCoroutine(RoundTimer());
     }
 
     IEnumerator RoundTimer()
     {
-        int secondsLeft = roundLength;
+        int secondsLeft = (int)(roundSteps * timeStep);
         while (secondsLeft > 0)
         {
             timerText.GetComponent<Text>().text = secondsLeft.ToString();
@@ -75,16 +73,16 @@ public class MatchManager : MonoBehaviour
     }
 
     // helper function for detecting if position is open
-    bool IsOpen(Vector3 position)
+    bool IsOpen(Vector3 position, bool includeTerritory)
     {
         return (
-            !player1Positions.Contains(position) &&
-            !player2Positions.Contains(position) &&
+            !player1.positions.Contains(position) &&
+            !player2.positions.Contains(position) &&
             !foodPositions.Contains(position) &&
             !powerUpPositions.Contains(position) &&
             !wallPositions.Contains(position) &&
-            !player1Territory.Contains(position) &&
-            !player2Territory.Contains(position)
+            (includeTerritory ||
+             (!player1.territory.Contains(position) && !player2.territory.Contains(position)))
         );
     }
 
@@ -92,8 +90,8 @@ public class MatchManager : MonoBehaviour
     bool IsCrash(Vector3 position)
     {
         return (
-            player1Positions.Contains(position) ||
-            player2Positions.Contains(position) ||
+            player1.positions.Contains(position) ||
+            player2.positions.Contains(position) ||
             wallPositions.Contains(position)
         );
     }
@@ -108,6 +106,43 @@ public class MatchManager : MonoBehaviour
         }
     }
 
+    void ClearTerritory(PlayerController player)
+    {
+        foreach (GameObject g in player.territoryBlocks)
+        {
+            Destroy(g);
+        }
+        player.territory.Clear();
+        player.territoryBlocks.Clear();
+    }
+
+    void AddTerritory(PlayerController player)
+    {
+        foreach (Vector3 pos in player.positions)
+        {
+            if (!player.territory.Contains(pos))
+            {
+                Vector3 pos1 = new Vector3(pos.x, 1, pos.z);
+                Vector3 pos2 = new Vector3(pos.x, 0, pos.z);
+                if (territoryDoubleLayer)
+                {
+                    GameObject t1 = Instantiate(player.territoryPrefab, pos1, Quaternion.identity);
+                    GameObject t2 = Instantiate(player.territoryPrefab, pos2, Quaternion.identity);
+                    player.territory.Add(pos1);
+                    player.territory.Add(pos2);
+                    player.territoryBlocks.Add(t1);
+                    player.territoryBlocks.Add(t2);
+                } else
+                {
+                    GameObject t = Instantiate(player.territoryPrefab, pos, Quaternion.identity);
+                    player.territory.Add(pos);
+                    player.territoryBlocks.Add(t);
+                }
+                
+            }
+        }
+    }
+
     // what happens each timestep
     void Repeat()
     {
@@ -116,7 +151,7 @@ public class MatchManager : MonoBehaviour
         if (numFood == 0 || Random.Range(0f, 1f) < foodSpawnRate && numFood < maxFood)
         {
             Vector3 foodPosition = map.GetRandomPosition();
-            if (IsOpen(foodPosition))
+            if (IsOpen(foodPosition, true))
             {
                 GameObject newFood = Instantiate(foodPrefab, foodPosition, Quaternion.identity);
                 foodPositions.Add(foodPosition);
@@ -126,7 +161,7 @@ public class MatchManager : MonoBehaviour
         if (Random.Range(0f, 1f) < powerUpSpawnRate && powerUpPositions.Count < maxPowerUp)
         {
             Vector3 powerUpPosition = map.GetRandomPosition();
-            if (IsOpen(powerUpPosition))
+            if (IsOpen(powerUpPosition, false))
             {
                 GameObject newPowerUp = Instantiate(powerUpPrefab, powerUpPosition, Quaternion.identity);
                 powerUpPositions.Add(powerUpPosition);
@@ -159,31 +194,34 @@ public class MatchManager : MonoBehaviour
             powerUpPositions.Remove(position2);
         }
 
-        // claim territory on powerup end
-        if (player1.powerTurns == 1)
+        // claim territory during power up
+        if (territoryOn)
         {
-            foreach (Vector3 pos in player1Positions)
+            if (player1.powerTurns > 0)
             {
-                Instantiate(player1TerritoryPrefab, pos, Quaternion.identity);
-                player1Territory.Add(pos);
+                AddTerritory(player1);
+            }
+            else if (!territoryPermanent)
+            {
+                ClearTerritory(player1);
+            }
+            if (player2.powerTurns > 0)
+            {
+                AddTerritory(player2);
+            }
+            else if (!territoryPermanent)
+            {
+                ClearTerritory(player2);
             }
         }
-        if (player2.powerTurns == 1)
-        {
-            foreach (Vector3 pos in player2Positions)
-            {
-                Instantiate(player2TerritoryPrefab, pos, Quaternion.identity);
-                player2Territory.Add(pos);
-            }
-        }      
 
-        Vector3 nextPosition1 = player1.NextMove(player1Positions);
-        Vector3 nextPosition2 = player2.NextMove(player2Positions);
+        Vector3 nextPosition1 = player1.NextMove();
+        Vector3 nextPosition2 = player2.NextMove();
 
         // detect + handle collisions
         bool headCollision = nextPosition1 == nextPosition2;
-        bool player1Crash = IsCrash(nextPosition1) || player2Territory.Contains(nextPosition1) || headCollision;
-        bool player2Crash = IsCrash(nextPosition2) || player1Territory.Contains(nextPosition2) || headCollision;
+        bool player1Crash = IsCrash(nextPosition1) || player2.territory.Contains(nextPosition1) || headCollision;
+        bool player2Crash = IsCrash(nextPosition2) || player1.territory.Contains(nextPosition2) || headCollision;
 
         // trigger gameOver if necessary
         bool player1Win = player2Crash && player2.length <= 1;
@@ -195,27 +233,27 @@ public class MatchManager : MonoBehaviour
         {
             Hurt(player1);
             // powerUp allow attack opponent's body
-            if (player1.powerTurns > 0 && player2Positions.Contains(nextPosition1))
+            if (player1.powerTurns > 0 && player2.positions.Contains(nextPosition1))
             {
                 Hurt(player2);
             }
         }
         else {
-            player1Positions.Add(nextPosition1);
+            player1.positions.Add(nextPosition1);
             player1.Move();
         }
         if (player2Crash)
         {
             // powerUp allow attack opponent's body
             Hurt(player2);
-            if (player2.powerTurns > 0 && player1Positions.Contains(nextPosition2))
+            if (player2.powerTurns > 0 && player1.positions.Contains(nextPosition2))
             {
                 Hurt(player1);
             }
         }
         else {
-            // player2Positions.Add(nextPosition2);
-            // player2.Move();
+            player2.positions.Add(nextPosition2);
+            player2.Move();
         }
     }
 
