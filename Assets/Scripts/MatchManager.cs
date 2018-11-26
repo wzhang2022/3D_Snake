@@ -21,8 +21,8 @@ public class MatchManager : MonoBehaviour
     public bool territoryPermanent = false;
 
     // player controllers - note can generalize into array if we do multiplayer
-    public PlayerController player1;
-    public PlayerController player2;
+    public Agent player1;
+    public Agent player2;
 
     // item prefabs
     public GameObject foodPrefab;
@@ -73,7 +73,7 @@ public class MatchManager : MonoBehaviour
     }
 
     // helper function for detecting if position is open
-    bool IsOpen(Vector3 position, bool includeTerritory)
+    public bool IsOpen(Vector3 position, bool includeTerritory)
     {
         return (
             !player1.positions.Contains(position) &&
@@ -97,7 +97,7 @@ public class MatchManager : MonoBehaviour
     }
 
     // helper function for hurting a player
-    void Hurt(PlayerController player)
+    void Hurt(Agent player)
     {
         // lose length unless powered up
         if (player.powerTurns < 1)
@@ -109,7 +109,7 @@ public class MatchManager : MonoBehaviour
         }
     }
 
-    void ClearTerritory(PlayerController player)
+    void ClearTerritory(Agent player)
     {
         foreach (GameObject g in player.territoryBlocks)
         {
@@ -119,7 +119,7 @@ public class MatchManager : MonoBehaviour
         player.territoryBlocks.Clear();
     }
 
-    void AddTerritory(PlayerController player)
+    void AddTerritory(Agent player)
     {
         foreach (Vector3 pos in player.positions)
         {
@@ -157,6 +157,7 @@ public class MatchManager : MonoBehaviour
             if (IsOpen(foodPosition, true))
             {
                 GameObject newFood = Instantiate(foodPrefab, foodPosition, Quaternion.identity);
+                Debug.Log("New food at " + newFood.transform.position.ToString());
                 foodPositions.Add(foodPosition);
             }
         }
@@ -218,8 +219,8 @@ public class MatchManager : MonoBehaviour
             }
         }
 
-        player1.DecideMove(player2, wallPositions, foodPositions, powerUpPositions);
-        player2.DecideMove(player1, wallPositions, foodPositions, powerUpPositions);
+        player1.MoveCommand(player1.DecideMove(player2, wallPositions, foodPositions, powerUpPositions));
+        player2.MoveCommand(player2.DecideMove(player1, wallPositions, foodPositions, powerUpPositions));
 
         Vector3 nextPosition1 = player1.NextMove();
         Vector3 nextPosition2 = player2.NextMove();

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KeyboardAgent : PlayerController {
+public class KeyboardAgent : Agent {
     [System.Serializable]
     public struct KeyBind
     {
@@ -14,6 +14,10 @@ public class KeyboardAgent : PlayerController {
         public char downY;
     }
     public KeyBind keyBind;
+
+    public override Vector3 DecideMove(Agent otherplayer, HashSet<Vector3> wallPositions, HashSet<Vector3> foodPositions, HashSet<Vector3> powerUpPositions) {
+        return this.direction2D;
+    }
 
     public override void Update()
     {

@@ -2,45 +2,44 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GreedyAgent : PlayerController
+public class GreedyAgent : Agent
 {
-    public override void Update()
-    {
-        return;
+    private MatchManager manager;
+    public void Start() {
+        GameObject managerObject = GameObject.Find("MatchManager");
+        manager = managerObject.GetComponent<MatchManager>();
+        Debug.Log(manager.ToString());
     }
 
-    public void Shuffle(Vector3[] array)
-    {
-        for (int i = 0; i < array.Length; i++)
-        {
-            int rnd = Random.Range(0, array.Length);
-            Vector3 tempGO = array[rnd];
-            array[rnd] = array[i];
-            array[i] = tempGO;
-        }
-    }
-
-    public override void DecideMove(
-        PlayerController otherplayer,
+    public override Vector3 DecideMove( //returns a Vector3
+        Agent otherplayer,
         HashSet<Vector3> wallPositions,
         HashSet<Vector3> foodPositions,
         HashSet<Vector3> powerUpPositions)
     {
-        Vector3 pos = base.head.transform.position;
-        Vector3[] moves = new[] { Vector3.left, Vector3.right, Vector3.up, Vector3.down, Vector3.forward, Vector3.back };
-        Shuffle(moves);
-        foreach (Vector3 move in moves)
-        {
-            if (move != -1 * base.direction_prev && move != base.direction_prev &&
-                !wallPositions.Contains(pos + move) &&
-                !otherplayer.positions.Contains(pos + move))
-            {
-                base.MoveCommand(move);
-                if (foodPositions.Contains(pos + move))
-                {
-                    break;
-                }
+        Vector3 target = new Vector3(0,0,0);
+        Vector3 head = this.head.transform.position;
+        foreach (Vector3 foodPosition in (foodPositions)) {
+            if (target == Vector3.zero || dist(target, head) > dist(foodPosition, head)) {
+                target = foodPosition;
             }
         }
+        Vector3[] moves = new[] { Vector3.left, Vector3.right, Vector3.up, Vector3.down, Vector3.forward, Vector3.back };
+        Vector3 moveToTake = moves[0];
+        foreach (Vector3 move in moves) {
+            if (dist(head + move, target) <= dist(head + moveToTake, target) && manager.IsOpen(head + move, false)) {
+                moveToTake = move;
+            }
+            if (dist(head + move, target) <= 0.1) {
+                moveToTake = move;
+                Debug.Log("next  is " +  (head + move).ToString() +  " and head is " + head.ToString() + " and direction is " + move.ToString());
+                break;
+            }
+        }
+        Debug.Log("Direction is " + moveToTake.ToString() + " and target is " + target.ToString() + " and head is " + head.ToString());
+        return moveToTake;
+    }
+    private float dist(Vector3 a, Vector3 b) {
+        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) + Mathf.Abs(a.z - b.z);
     }
 }

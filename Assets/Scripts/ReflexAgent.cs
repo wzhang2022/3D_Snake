@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ReflexAgent : PlayerController
+public class ReflexAgent : Agent
 {
 
     public void Shuffle(Vector3[] array)
@@ -16,8 +16,8 @@ public class ReflexAgent : PlayerController
         }
     }
 
-    public override void DecideMove(
-        PlayerController otherplayer,
+    public override Vector3 DecideMove(
+        Agent otherplayer,
         HashSet<Vector3> wallPositions,
         HashSet<Vector3> foodPositions,
         HashSet<Vector3> powerUpPositions)
@@ -31,12 +31,9 @@ public class ReflexAgent : PlayerController
                 !wallPositions.Contains(pos + move) &&
                 !otherplayer.positions.Contains(pos + move))
             {
-                base.MoveCommand(move);
-                if (foodPositions.Contains(pos + move))
-                {
-                    break;
-                }
+                return move;
             }
         }
+        return moves[0];
     }
 }
