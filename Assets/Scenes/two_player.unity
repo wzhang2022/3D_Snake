@@ -2126,7 +2126,7 @@ MonoBehaviour:
   powerUpSpawnRate: 0.1
   maxPowerUp: 1
   powerUpDuration: 15
-  roundSteps: 360
+  roundSteps: 180
   territoryOn: 0
   territoryDoubleLayer: 0
   territoryPermanent: 0
