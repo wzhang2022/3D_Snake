@@ -7,10 +7,12 @@ public class StartMenu : MonoBehaviour {
 
 	public void Play2Player()
     {
-        SceneManager.LoadScene(1);
+        Debug.Log("Play 2-player");
+        SceneManager.LoadScene(2);
     }
     public void Play1Player()
     {
+        Debug.Log("Play 1-player");
         SceneManager.LoadScene(1);
     }
 }
