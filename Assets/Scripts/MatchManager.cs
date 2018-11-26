@@ -157,7 +157,7 @@ public class MatchManager : MonoBehaviour
             if (IsOpen(foodPosition, true))
             {
                 GameObject newFood = Instantiate(foodPrefab, foodPosition, Quaternion.identity);
-                Debug.Log("New food at " + newFood.transform.position.ToString());
+                //Debug.Log("New food at " + newFood.transform.position.ToString());
                 foodPositions.Add(foodPosition);
             }
         }

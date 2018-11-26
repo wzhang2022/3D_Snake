@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GreedyAgent : Agent
@@ -19,24 +20,32 @@ public class GreedyAgent : Agent
     {
         Vector3 target = new Vector3(0,0,0);
         Vector3 head = this.head.transform.position;
-        foreach (Vector3 foodPosition in (foodPositions)) {
-            if (target == Vector3.zero || dist(target, head) > dist(foodPosition, head)) {
-                target = foodPosition;
+        HashSet<Vector3> goals = new HashSet<Vector3>(foodPositions);
+        goals.UnionWith(powerUpPositions);
+        foreach (Vector3 goal in goals) {
+            if (target == Vector3.zero || dist(target, head) > dist(goal, head)) {
+                target = goal;
             }
         }
         Vector3[] moves = new[] { Vector3.left, Vector3.right, Vector3.up, Vector3.down, Vector3.forward, Vector3.back };
+        moves = moves.Where(move =>
+                !otherplayer.positions.Contains(head + move) && //prevent running into other player
+                !this.positions.Contains(head + move) && //prevent running into self
+                !wallPositions.Contains(head + move) && //prevent running into walls
+                head + move != otherplayer.NextMove() && //prevent head collisions
+                (0 <= (move + head).y) && (move + head).y <= 1 && //ensure I stay within layer boundaries
+                this.direction_prev != -move).ToArray<Vector3>();
+        if (moves.Count() == 0) {
+            Debug.Log("No valid moves");
+            return Vector3.left;
+        }
         Vector3 moveToTake = moves[0];
         foreach (Vector3 move in moves) {
-            if (dist(head + move, target) <= dist(head + moveToTake, target) && manager.IsOpen(head + move, false)) {
+            if (dist(head + move, target) <= dist(head + moveToTake, target)) {
                 moveToTake = move;
-            }
-            if (dist(head + move, target) <= 0.1) {
-                moveToTake = move;
-                Debug.Log("next  is " +  (head + move).ToString() +  " and head is " + head.ToString() + " and direction is " + move.ToString());
-                break;
             }
         }
-        Debug.Log("Direction is " + moveToTake.ToString() + " and target is " + target.ToString() + " and head is " + head.ToString());
+        //Debug.Log("Direction is " + moveToTake.ToString() + " and target is " + target.ToString() + " and head is " + head.ToString());
         return moveToTake;
     }
     private float dist(Vector3 a, Vector3 b) {
