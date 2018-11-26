@@ -1734,6 +1734,7 @@ GameObject:
   - component: {fileID: 1594805645}
   - component: {fileID: 1594805644}
   - component: {fileID: 1594805648}
+  - component: {fileID: 1594805643}
   - component: {fileID: 1594805649}
   m_Layer: 0
   m_Name: Player1_head
@@ -1742,6 +1743,30 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1594805643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1594805642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30dc451c8c6748b469dd85285b7d0a7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  head: {fileID: 1594805642}
+  bodyPrefab: {fileID: 1137459855221860, guid: 3d3eb448d5a80a04e9de33569778940d, type: 2}
+  powerUpMaterial: {fileID: 2100000, guid: 90f547bcd6b36d548a3d4e5403fd783d, type: 2}
+  headMarkerMaterial: {fileID: 2100000, guid: 4591c98bebdb24d4583d7222a768750d, type: 2}
+  territoryPrefab: {fileID: 1137459855221860, guid: 181b8591b48581b4593e98fd11eea2a8,
+    type: 2}
+  length: 5
+  powerTurns: 0
+  direction: {x: -1, y: 0, z: 0}
+  layer: 0
+  direction2D: {x: 0, y: 0, z: 0}
+  queuedDirection: {x: 0, y: 0, z: 0}
+  direction_prev: {x: 0, y: 0, z: 0}
 --- !u!65 &1594805644
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2145,17 +2170,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c74a3037fe3b2942a67fe1dcea14109, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeStep: 0.25
+  timeStep: 0.001
   foodSpawnRate: 0.1
   maxFood: 30
   powerUpSpawnRate: 0.1
   maxPowerUp: 1
   powerUpDuration: 15
-  roundSteps: 360
+  roundSteps: 10000
   territoryOn: 0
   territoryDoubleLayer: 0
   territoryPermanent: 0
-  player1: {fileID: 1594805649}
+  player1: {fileID: 1594805643}
   player2: {fileID: 1649160694}
   foodPrefab: {fileID: 1684524527812884, guid: 40d75ded267258348a60299068f95d10, type: 2}
   powerUpPrefab: {fileID: 1989851686697500, guid: c13d5fbe6e6b25d459c2589b5e587f10,
