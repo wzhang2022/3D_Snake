@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class ReflexAgent : PlayerController
 {
-    public override void Update()
-    {
-        return;
-    }
 
     public void Shuffle(Vector3[] array)
     {

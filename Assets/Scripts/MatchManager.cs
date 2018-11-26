@@ -102,7 +102,10 @@ public class MatchManager : MonoBehaviour
         // lose length unless powered up
         if (player.powerTurns < 1)
         {
-            player.length = player.length - player.length / 2;
+            if (player.length <= 3) {
+                player.length = 1;
+            }
+            player.length = player.length - player.length / 3;
         }
     }
 
