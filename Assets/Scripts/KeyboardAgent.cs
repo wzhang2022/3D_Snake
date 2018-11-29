@@ -15,8 +15,34 @@ public class KeyboardAgent : Agent {
     }
     public KeyBind keyBind;
 
-    public override Vector3 DecideMove(Agent otherplayer, HashSet<Vector3> wallPositions, HashSet<Vector3> foodPositions, HashSet<Vector3> powerUpPositions) {
-        return this.direction2D;
+    public Vector3 queuedDirection;
+
+    public void Start()
+    {
+        queuedDirection = this.direction;
+    }
+
+    public override Vector3 DecideMove(Agent otherplayer) {
+        Vector3 move = this.direction2D;
+        // auto-load queued moves for next move (to allow for tight turns)
+        MoveCommand(queuedDirection);
+        return move;
+    }
+
+    public void KeyCommand(Vector3 c)
+    {
+        // allow direction if it is not in same axis of previous move, or if no length
+        if (length == 1 || (c != -1 * this.direction_prev && c != this.direction_prev))
+        {
+            // clear queued commands when making valid move
+            queuedDirection = c;
+            this.MoveCommand(c);
+        }
+        else
+        {
+            // buffer moves in same axis
+            queuedDirection = c;
+        }
     }
 
     public override void Update()
@@ -25,27 +51,27 @@ public class KeyboardAgent : Agent {
         {
             if (c == keyBind.downX)
             {
-                base.MoveCommand(Vector3.left);
+                KeyCommand(Vector3.left);
             }
             else if (c == keyBind.upX)
             {
-                base.MoveCommand(Vector3.right);
+                KeyCommand(Vector3.right);
             }
             else if (c == keyBind.downZ)
             {
-                base.MoveCommand(Vector3.back);
+                KeyCommand(Vector3.back);
             }
             else if (c == keyBind.upZ)
             {
-                base.MoveCommand(Vector3.forward);
+                KeyCommand(Vector3.forward);
             }
             else if (c == keyBind.downY && layer == 1)
             {
-                base.MoveCommand(Vector3.down);
+                KeyCommand(Vector3.down);
             }
             else if (c == keyBind.upY && layer == 0)
             {
-                base.MoveCommand(Vector3.up);
+                KeyCommand(Vector3.up);
             }
         }
     }

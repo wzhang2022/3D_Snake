@@ -39,9 +39,9 @@ public class MatchManager : MonoBehaviour
     public BasicMap map;
 
     // game data
-    private HashSet<Vector3> wallPositions = new HashSet<Vector3>();
-    private HashSet<Vector3> foodPositions = new HashSet<Vector3>();
-    private HashSet<Vector3> powerUpPositions = new HashSet<Vector3>();
+    public HashSet<Vector3> wallPositions = new HashSet<Vector3>();
+    public HashSet<Vector3> foodPositions = new HashSet<Vector3>();
+    public HashSet<Vector3> powerUpPositions = new HashSet<Vector3>();
 
     // Initialize everything
     void Start()
@@ -219,10 +219,12 @@ public class MatchManager : MonoBehaviour
             }
         }
 
-        player1.MoveCommand(player1.DecideMove(player2, wallPositions, foodPositions, powerUpPositions));
-        player2.MoveCommand(player2.DecideMove(player1, wallPositions, foodPositions, powerUpPositions));
+        player1.MoveCommand(player1.DecideMove(player2));
+        player2.MoveCommand(player2.DecideMove(player1));
 
+        player1.PrepareNextMove();
         Vector3 nextPosition1 = player1.NextMove();
+        player2.PrepareNextMove();
         Vector3 nextPosition2 = player2.NextMove();
 
         // detect + handle collisions

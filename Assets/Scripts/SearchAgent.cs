@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GreedyAgent : Agent
+public class SearchAgent : Agent
 {
-    public MatchManager m;
+    private MatchManager m;
     private Agent opponent;
 
     public void Start()
@@ -18,32 +18,21 @@ public class GreedyAgent : Agent
 
     bool IsOpen(Vector3 pos)
     {
-        return !this.positions.Contains(pos) && // self
+        return !opponent.positions.Contains(pos) && // other player
+               pos != opponent.NextMove() && // head collisions
+               !this.positions.Contains(pos) && // self
                !m.wallPositions.Contains(pos) && // walls
                (0 <= (pos).y) && (pos).y <= 1; // within layer boundaries
     }
 
-    bool IsSafe(Vector3 pos)
-    {
-        return this.powerTurns > 0 ||
-               (!opponent.positions.Contains(pos) && // other player
-               pos != opponent.NextMove()); // head collisions
-    }
-
     // filter to create list of valid moves
-    Vector3[] FindSafeMoves()
+    Vector3[] FindValidMoves()
     {
         Vector3 head = this.head.transform.position;
         Vector3[] moves = new[] { Vector3.left, Vector3.right, Vector3.up, Vector3.down, Vector3.forward, Vector3.back };
         moves = moves.Where(move =>
-                IsOpen(head + move) && 
-                IsSafe(head + move) &&
+                IsOpen(head + move) &&
                 this.direction_prev != -move).ToArray<Vector3>();
-        if (moves.Count() == 0)
-        {
-            Debug.Log("No valid moves");
-            return new[] { Vector3.left };
-        }
         return moves;
     }
 
@@ -52,17 +41,11 @@ public class GreedyAgent : Agent
     {
         Vector3 target = new Vector3(0, 0, 0);
         Vector3 head = this.head.transform.position;
-        // food and powerups are goals
         HashSet<Vector3> goals = new HashSet<Vector3>(m.foodPositions);
         goals.UnionWith(m.powerUpPositions);
-        // if currently powered up, so is the other player's body
-        if (this.powerTurns > 0)
-        {
-            goals.UnionWith(opponent.positions);
-        }
         foreach (Vector3 goal in goals)
         {
-            if (target == Vector3.zero || this.MDist(target, head) > this.MDist(goal, head))
+            if (target == Vector3.zero || SearchDist(target, head) > SearchDist(goal, head))
             {
                 target = goal;
             }
@@ -79,14 +62,14 @@ public class GreedyAgent : Agent
         // identify goal
         Vector3 head = this.head.transform.position;
         Vector3 target = FindTarget();
-        // filter out invalid and unsafe moves
-        Vector3[] moves = FindSafeMoves();
+        // filter out valid moves
+        Vector3[] moves = FindValidMoves();
         // select move on path to target
         Vector3 bestMove = moves[0];
-        float bestDist = this.MDist(head + bestMove, target);
+        float bestDist = SearchDist(head + bestMove, target);
         foreach (Vector3 move in moves)
         {
-            float dist = this.MDist(head + move, target);
+            float dist = SearchDist(head + move, target);
             if (dist <= bestDist)
             {
                 bestMove = move;
@@ -94,5 +77,13 @@ public class GreedyAgent : Agent
             }
         }
         return bestMove;
+    }
+
+    // return length of shortest open path between two points (using A* search)
+    private float SearchDist(Vector3 start, Vector3 end)
+    {
+        // use manhattan distance as a heuristic
+        float heuristic = this.MDist(start, end);
+        return heuristic;
     }
 }
