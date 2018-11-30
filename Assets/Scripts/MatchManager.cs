@@ -102,6 +102,7 @@ public class MatchManager : MonoBehaviour
         // lose length unless powered up
         if (player.powerTurns < 1)
         {
+            // Debug.Log(player.powerTurns);
             if (player.length <= 3) {
                 player.length = 1;
             }
@@ -233,8 +234,8 @@ public class MatchManager : MonoBehaviour
         bool player2Crash = IsCrash(nextPosition2) || player1.territory.Contains(nextPosition2) || headCollision;
 
         // trigger gameOver if necessary
-        bool player1Win = player2Crash && player2.length <= 1;
-        bool player2Win = player1Crash && player1.length <= 1;
+        bool player1Win = player2Crash && player2.length <= 1 && player2.powerTurns < 1;
+        bool player2Win = player1Crash && player1.length <= 1 && player1.powerTurns < 1;
         bool tie = player1Win && player2Win;
         GameOver(player1Win, player2Win, tie);
 

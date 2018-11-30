@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+
+// NOTE: this agent is greedy both in goal selection (wants to go to the nearest beneficial position),
+// and in it's method of evaluating and navigating to positions (decreasing manhattan distance)
 public class GreedyAgent : Agent
 {
     public MatchManager m;
@@ -25,7 +28,7 @@ public class GreedyAgent : Agent
 
     bool IsSafe(Vector3 pos)
     {
-        return this.powerTurns > 0 ||
+        return this.powerTurns > 1 ||
                (!opponent.positions.Contains(pos) && // other player
                pos != opponent.NextMove()); // head collisions
     }
@@ -56,7 +59,7 @@ public class GreedyAgent : Agent
         HashSet<Vector3> goals = new HashSet<Vector3>(m.foodPositions);
         goals.UnionWith(m.powerUpPositions);
         // if currently powered up, so is the other player's body
-        if (this.powerTurns > 0)
+        if (this.powerTurns > 1)
         {
             goals.UnionWith(opponent.positions);
         }
