@@ -89,7 +89,7 @@ public class SearchAgent : Agent
         return bestMove;
     }
 
-    // return length of shortest open path from a start point to any goal (using A* search)
+    // return move with shortest open path from a start point to any goal (using BFS - considered A* but doesn't fit easily)
     private float SearchDist(Vector3 start, HashSet<Vector3> goals)
     {
         // if there are no goals, return arbitrary value
@@ -97,17 +97,48 @@ public class SearchAgent : Agent
         {
             return 0;
         }
-        // use manhattan distance to nearest goal as a heuristic
-        Vector3 closest = goals.First();
-        foreach (Vector3 goal in goals)
+        if (goals.Contains(start))
         {
-            if (this.MDist(closest, start) > this.MDist(goal, start))
+            return 0;
+        }
+
+        Vector3[] moves = new[] { Vector3.left, Vector3.right, Vector3.up, Vector3.down, Vector3.forward, Vector3.back };
+
+        HashSet<Vector3> visited = new HashSet<Vector3>();
+        Queue<BFSNode> queue = new Queue<BFSNode>();
+        queue.Enqueue(new BFSNode(start, 0));
+        while (queue.Count > 0)
+        {
+            BFSNode node = queue.Dequeue();
+            Vector3 pos = node.Position;
+            float dist = node.Cost;
+            visited.Add(pos);
+            foreach (Vector3 move in moves)
             {
-                closest = goal;
+                Vector3 newPos = pos + move;
+                if (goals.Contains(newPos))
+                {
+                    return dist + 1;
+                }
+                if (IsOpen(newPos) && IsSafe(newPos) && !visited.Contains(newPos))
+                {
+                    queue.Enqueue(new BFSNode(newPos, dist + 1));
+                    
+                }
             }
         }
-        float heuristic = this.MDist(start, closest);
-        // TODO!
-        return heuristic;
+        Debug.Log("no goals reachable");
+        return 99999; // no goals reachable
+    }
+}
+
+class BFSNode
+{ 
+    public float Cost { get; set; }
+    public Vector3 Position { get; set; }
+    public BFSNode(Vector3 p, float c)
+    {
+        Cost = c;
+        Position = p;
     }
 }
