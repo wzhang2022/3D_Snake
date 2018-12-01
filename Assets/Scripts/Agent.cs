@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,6 +11,7 @@ public abstract class Agent : MonoBehaviour {
     public Material powerUpMaterial;
     public Material headMarkerMaterial;
     public GameObject territoryPrefab;
+    public MatchManager matchManager;
 
     // data
     public ArrayList body = new ArrayList();
@@ -28,13 +30,18 @@ public abstract class Agent : MonoBehaviour {
     public Vector3 direction2D;
     public Vector3 direction_prev;
 
+    // reference to opponent
+    public Agent opponent;
+
     void Start () {
         direction2D = direction;
         body = new ArrayList();
-        Debug.Log(body.ToString());
+        // obtain reference to match manager script to access game state
+        GameObject managerObject = GameObject.Find("MatchManager");
+        matchManager = managerObject.GetComponent<MatchManager>();
     }
 	
-    // process a movement command
+    // process a movement command, changes the direction and direction2D variabls
     public void MoveCommand(Vector3 c)
     {
         // allow direction if it is not in same axis of previous move, or if no length
@@ -124,6 +131,32 @@ public abstract class Agent : MonoBehaviour {
     public virtual void Update()
     {
         return;
+
+    }
+   protected Vector3[] FindSafeMoves() {
+        Vector3 head = this.head.transform.position;
+        Vector3[] moves = new[] { Vector3.left, Vector3.right, Vector3.up, Vector3.down, Vector3.forward, Vector3.back };
+        moves = moves.Where(move =>
+                IsOpen(head + move) &&
+                IsSafe(head + move) &&
+                this.direction_prev != -move).ToArray<Vector3>();
+        if (moves.Count() == 0) {
+            Debug.Log("No valid moves");
+            return new[] { Vector3.left };
+        }
+        return moves;
+    }
+
+    private bool IsOpen(Vector3 pos) {
+        return !this.positions.Contains(pos) && // self
+               !matchManager.wallPositions.Contains(pos) && // walls
+               (0 <= (pos).y) && (pos).y <= 1; // within layer boundaries
+    }
+
+    private bool IsSafe(Vector3 pos) {
+        return this.powerTurns > 1 ||
+               (!opponent.positions.Contains(pos) && // other player
+               pos != opponent.NextMove()); // head collisions
     }
 
     // decide what move to take, returns a Vector3

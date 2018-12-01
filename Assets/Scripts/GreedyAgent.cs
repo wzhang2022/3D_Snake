@@ -8,47 +8,7 @@ using UnityEngine;
 // and in it's method of evaluating and navigating to positions (decreasing manhattan distance)
 public class GreedyAgent : Agent
 {
-    public MatchManager m;
-    private Agent opponent;
 
-    public void Start()
-    {
-        // obtain reference to match manager script to access game state
-        GameObject managerObject = GameObject.Find("MatchManager");
-        m = managerObject.GetComponent<MatchManager>();
-        // Debug.Log(m.ToString());
-    }
-
-    bool IsOpen(Vector3 pos)
-    {
-        return !this.positions.Contains(pos) && // self
-               !m.wallPositions.Contains(pos) && // walls
-               (0 <= (pos).y) && (pos).y <= 1; // within layer boundaries
-    }
-
-    bool IsSafe(Vector3 pos)
-    {
-        return this.powerTurns > 1 ||
-               (!opponent.positions.Contains(pos) && // other player
-               pos != opponent.NextMove()); // head collisions
-    }
-
-    // filter to create list of valid moves
-    Vector3[] FindSafeMoves()
-    {
-        Vector3 head = this.head.transform.position;
-        Vector3[] moves = new[] { Vector3.left, Vector3.right, Vector3.up, Vector3.down, Vector3.forward, Vector3.back };
-        moves = moves.Where(move =>
-                IsOpen(head + move) && 
-                IsSafe(head + move) &&
-                this.direction_prev != -move).ToArray<Vector3>();
-        if (moves.Count() == 0)
-        {
-            Debug.Log("No valid moves");
-            return new[] { Vector3.left };
-        }
-        return moves;
-    }
 
     // identify closest goal as target
     Vector3 FindTarget()
@@ -56,8 +16,8 @@ public class GreedyAgent : Agent
         Vector3 target = new Vector3(0, 0, 0);
         Vector3 head = this.head.transform.position;
         // food and powerups are goals
-        HashSet<Vector3> goals = new HashSet<Vector3>(m.foodPositions);
-        goals.UnionWith(m.powerUpPositions);
+        HashSet<Vector3> goals = new HashSet<Vector3>(matchManager.foodPositions);
+        goals.UnionWith(matchManager.powerUpPositions);
         // if currently powered up, so is the other player's body
         if (this.powerTurns > 1)
         {
@@ -83,7 +43,7 @@ public class GreedyAgent : Agent
         Vector3 head = this.head.transform.position;
         Vector3 target = FindTarget();
         // filter out invalid and unsafe moves
-        Vector3[] moves = FindSafeMoves();
+        Vector3[] moves = this.FindSafeMoves();
         // select move on path to target
         Vector3 bestMove = moves[0];
         float bestDist = this.MDist(head + bestMove, target);

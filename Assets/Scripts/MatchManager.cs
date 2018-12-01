@@ -147,31 +147,30 @@ public class MatchManager : MonoBehaviour
         }
     }
 
-    // what happens each timestep
-    void Repeat()
-    {
-        // spawn new food
+    void spawnFood() {
         int numFood = foodPositions.Count;
-        if (numFood == 0 || Random.Range(0f, 1f) < foodSpawnRate && numFood < maxFood)
-        {
+        if (numFood == 0 || Random.Range(0f, 1f) < foodSpawnRate && numFood < maxFood) {
             Vector3 foodPosition = map.GetRandomPosition();
-            if (IsOpen(foodPosition, true))
-            {
+            if (IsOpen(foodPosition, true)) {
                 GameObject newFood = Instantiate(foodPrefab, foodPosition, Quaternion.identity);
                 //Debug.Log("New food at " + newFood.transform.position.ToString());
                 foodPositions.Add(foodPosition);
             }
         }
         // spawn new powerups - for now only spawn one at a time
-        if (Random.Range(0f, 1f) < powerUpSpawnRate && powerUpPositions.Count < maxPowerUp)
-        {
+        if (Random.Range(0f, 1f) < powerUpSpawnRate && powerUpPositions.Count < maxPowerUp) {
             Vector3 powerUpPosition = map.GetRandomPosition();
-            if (IsOpen(powerUpPosition, false))
-            {
+            if (IsOpen(powerUpPosition, false)) {
                 GameObject newPowerUp = Instantiate(powerUpPrefab, powerUpPosition, Quaternion.identity);
                 powerUpPositions.Add(powerUpPosition);
             }
         }
+    }
+    // what happens each timestep
+    void Repeat()
+    {
+        // spawn new food
+        spawnFood();
 
         Vector3 position1 = player1.head.transform.position;
         Vector3 position2 = player2.head.transform.position;
@@ -219,52 +218,11 @@ public class MatchManager : MonoBehaviour
                 ClearTerritory(player2);
             }
         }
+        ProcessMoves();
 
-        player1.MoveCommand(player1.DecideMove(player2));
-        player2.MoveCommand(player2.DecideMove(player1));
 
-        player1.PrepareNextMove();
-        Vector3 nextPosition1 = player1.NextMove();
-        player2.PrepareNextMove();
-        Vector3 nextPosition2 = player2.NextMove();
 
-        // detect + handle collisions
-        bool headCollision = nextPosition1 == nextPosition2;
-        bool player1Crash = IsCrash(nextPosition1) || player2.territory.Contains(nextPosition1) || headCollision;
-        bool player2Crash = IsCrash(nextPosition2) || player1.territory.Contains(nextPosition2) || headCollision;
 
-        // trigger gameOver if necessary
-        bool player1Win = player2Crash && player2.length <= 1 && player2.powerTurns < 1;
-        bool player2Win = player1Crash && player1.length <= 1 && player1.powerTurns < 1;
-        bool tie = player1Win && player2Win;
-        GameOver(player1Win, player2Win, tie);
-
-        if (player1Crash)
-        {
-            Hurt(player1);
-            // powerUp allow attack opponent's body
-            if (player1.powerTurns > 0 && player2.positions.Contains(nextPosition1))
-            {
-                Hurt(player2);
-            }
-        }
-        else {
-            player1.positions.Add(nextPosition1);
-            player1.Move();
-        }
-        if (player2Crash)
-        {
-            // powerUp allow attack opponent's body
-            Hurt(player2);
-            if (player2.powerTurns > 0 && player1.positions.Contains(nextPosition2))
-            {
-                Hurt(player1);
-            }
-        }
-        else {
-            player2.positions.Add(nextPosition2);
-            player2.Move();
-        }
     }
 
     // function to display the gameover screen
@@ -289,4 +247,44 @@ public class MatchManager : MonoBehaviour
         }
     }
 
+    private void ProcessMoves() {
+        player1.MoveCommand(player1.DecideMove(player2));
+        player2.MoveCommand(player2.DecideMove(player1));
+        player1.PrepareNextMove();
+        Vector3 nextPosition1 = player1.NextMove();
+        player2.PrepareNextMove();
+        Vector3 nextPosition2 = player2.NextMove();
+        // detect + handle collisions
+        bool headCollision = nextPosition1 == nextPosition2;
+        bool player1Crash = IsCrash(nextPosition1) || player2.territory.Contains(nextPosition1) || headCollision;
+        bool player2Crash = IsCrash(nextPosition2) || player1.territory.Contains(nextPosition2) || headCollision;
+
+        // trigger gameOver if necessary
+        bool player1Win = player2Crash && player2.length <= 1 && player2.powerTurns < 1;
+        bool player2Win = player1Crash && player1.length <= 1 && player1.powerTurns < 1;
+        bool tie = player1Win && player2Win;
+        GameOver(player1Win, player2Win, tie);
+
+        if (player1Crash) {
+            Hurt(player1);
+            // powerUp allow attack opponent's body
+            if (player1.powerTurns > 0 && player2.positions.Contains(nextPosition1)) {
+                Hurt(player2);
+            }
+        } else {
+            player1.positions.Add(nextPosition1);
+            player1.Move();
+        }
+        if (player2Crash) {
+            // powerUp allow attack opponent's body
+            Hurt(player2);
+            if (player2.powerTurns > 0 && player1.positions.Contains(nextPosition2)) {
+                Hurt(player1);
+            }
+        } else {
+            player2.positions.Add(nextPosition2);
+            player2.Move();
+        }
+
+    }
 }
