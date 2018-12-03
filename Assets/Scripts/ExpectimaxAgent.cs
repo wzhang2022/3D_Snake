@@ -14,7 +14,7 @@ public class ExpectimaxAgent : Agent {
         // Debug.Log(m.ToString());
     }
     public override Vector3 DecideMove(Agent otherplayer) {
-        GameState currState = new State(m.wallPositions, m.powerUpPositions, m.foodPositions, this, this.opponent);
+        GameState currState = new GameState(m.wallPositions, m.powerUpPositions, m.foodPositions, this, this.opponent);
         return expectimaxMove(this, currState);
     }
     //returns the best move, calculated by expectimax, of the agent given the game state
