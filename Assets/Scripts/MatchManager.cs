@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-
+using UnityEngine.SceneManagement;
 // TODO: will add another script "GameManager" for things requiring persisting over scenes, like music, etc.
 public class MatchManager : MonoBehaviour
 {
@@ -231,6 +231,14 @@ public class MatchManager : MonoBehaviour
         if (player2Win || player1Win || tie)
         {
             Time.timeScale = 0;
+            //loop for trials
+            /*
+            if (tie) Debug.Log("Tie");
+            if (player1Win) Debug.Log("Player1 win");
+            if (player2Win) Debug.Log("Player2 win");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            */
+
             gameOverMenu.SetActive(true);
             if (tie)
             {

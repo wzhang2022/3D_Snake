@@ -147,13 +147,16 @@ public abstract class Agent : MonoBehaviour {
         return moves;
     }
 
-    private bool IsOpen(Vector3 pos) {
+    protected bool IsOpen(Vector3 pos) {
+        Debug.Log(this.ToString());
+        Debug.Log(pos);
+        Debug.Log(this.positions);
         return !this.positions.Contains(pos) && // self
                !matchManager.wallPositions.Contains(pos) && // walls
                (0 <= (pos).y) && (pos).y <= 1; // within layer boundaries
     }
 
-    private bool IsSafe(Vector3 pos) {
+    protected bool IsSafe(Vector3 pos) {
         return this.powerTurns > 1 ||
                (!opponent.positions.Contains(pos) && // other player
                pos != opponent.NextMove()); // head collisions

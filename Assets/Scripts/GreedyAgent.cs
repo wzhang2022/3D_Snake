@@ -11,7 +11,7 @@ public class GreedyAgent : Agent
 
 
     // identify closest goal as target
-    Vector3 FindTarget()
+    private Vector3 FindTarget()
     {
         Vector3 target = new Vector3(0, 0, 0);
         Vector3 head = this.head.transform.position;
