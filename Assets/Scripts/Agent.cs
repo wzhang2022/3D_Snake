@@ -25,13 +25,13 @@ public abstract class Agent : MonoBehaviour {
     public int powerTurns = 0;
 
     // variables to manage movement
-    public Vector3 direction;
-    public int layer = 0;
-    public Vector3 direction2D;
-    public Vector3 direction_prev;
+    protected Vector3 direction;
+    protected int layer = 0;
+    protected Vector3 direction2D;
+    protected Vector3 direction_prev;
 
     // reference to opponent
-    public Agent opponent;
+    protected Agent opponent;
 
     void Start () {
         direction2D = direction;
@@ -147,10 +147,10 @@ public abstract class Agent : MonoBehaviour {
         return moves;
     }
 
-    protected bool IsOpen(Vector3 pos) {
+    protected bool IsOpen(Vector3 pos) { //checks if anything is in the square
         Debug.Log(this.ToString());
         Debug.Log(pos);
-        Debug.Log(this.positions);
+        Debug.Log(this.positions.Contains(pos));
         return !this.positions.Contains(pos) && // self
                !matchManager.wallPositions.Contains(pos) && // walls
                (0 <= (pos).y) && (pos).y <= 1; // within layer boundaries

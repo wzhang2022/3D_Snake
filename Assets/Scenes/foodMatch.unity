@@ -1918,7 +1918,6 @@ MonoBehaviour:
   direction2D: {x: 0, y: 0, z: 0}
   direction_prev: {x: 0, y: 0, z: 0}
   opponent: {fileID: 0}
-  m: {fileID: 0}
 --- !u!1 &1643046987
 GameObject:
   m_ObjectHideFlags: 0
@@ -1946,8 +1945,8 @@ GameObject:
   - component: {fileID: 1649160688}
   - component: {fileID: 1649160691}
   - component: {fileID: 1649160692}
-  - component: {fileID: 1649160694}
   - component: {fileID: 1649160695}
+  - component: {fileID: 1649160694}
   - component: {fileID: 1649160687}
   - component: {fileID: 1649160693}
   m_Layer: 0
@@ -2148,7 +2147,6 @@ MonoBehaviour:
   direction2D: {x: 0, y: 0, z: 0}
   direction_prev: {x: 0, y: 0, z: 0}
   opponent: {fileID: 0}
-  m: {fileID: 0}
 --- !u!1 &1872821678
 GameObject:
   m_ObjectHideFlags: 0
@@ -2260,7 +2258,7 @@ MonoBehaviour:
   territoryDoubleLayer: 0
   territoryPermanent: 0
   player1: {fileID: 1594805649}
-  player2: {fileID: 1649160694}
+  player2: {fileID: 1649160695}
   foodPrefab: {fileID: 1684524527812884, guid: 40d75ded267258348a60299068f95d10, type: 2}
   powerUpPrefab: {fileID: 1989851686697500, guid: c13d5fbe6e6b25d459c2589b5e587f10,
     type: 2}

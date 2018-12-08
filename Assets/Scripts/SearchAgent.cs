@@ -7,53 +7,13 @@ using UnityEngine;
 // but it uses search within that framework to evaluate costs and get to the local goal quickest
 public class SearchAgent : Agent
 {
-    public MatchManager m;
-
-    public void Start()
-    {
-        // obtain reference to match manager script to access game state
-        GameObject managerObject = GameObject.Find("MatchManager");
-        m = managerObject.GetComponent<MatchManager>();
-        // Debug.Log(m.ToString());
-    }
-    /*
-   bool IsOpen(Vector3 pos)
-   {
-       return !this.positions.Contains(pos) && // self
-              !m.wallPositions.Contains(pos) && // walls
-              (0 <= (pos).y) && (pos).y <= 1; // within layer boundaries
-   }
-
-   bool IsSafe(Vector3 pos)
-   {
-       return this.powerTurns > 1 ||
-              (!this.opponent.positions.Contains(pos) && // other player
-              pos != this.opponent.NextMove()); // head collisions
-   }
-
-   // filter to create list of valid moves
-   Vector3[] FindSafeMoves()
-   {
-       Vector3 head = this.head.transform.position;
-       Vector3[] moves = new[] { Vector3.left, Vector3.right, Vector3.up, Vector3.down, Vector3.forward, Vector3.back };
-       moves = moves.Where(move =>
-               IsOpen(head + move) &&
-               IsSafe(head + move) &&
-               this.direction_prev != -move).ToArray<Vector3>();
-       if (moves.Count() == 0)
-       {
-           Debug.Log("No valid moves");
-           return new[] { Vector3.left };
-       }
-       return moves;
-   }
-   */
     // identify all potential goals
     HashSet<Vector3> FindGoals()
     {
         // food and powerups are goals
-        HashSet<Vector3> goals = new HashSet<Vector3>(m.foodPositions);
-        goals.UnionWith(m.powerUpPositions);
+        Debug.Log(this.matchManager);
+        HashSet<Vector3> goals = new HashSet<Vector3>(this.matchManager.foodPositions);
+        goals.UnionWith(this.matchManager.powerUpPositions);
         // if currently powered up, so is the other player's body
         if (this.powerTurns > 1)
         {
@@ -106,7 +66,7 @@ public class SearchAgent : Agent
         HashSet<Vector3> visited = new HashSet<Vector3>();
         Queue<BFSNode> queue = new Queue<BFSNode>();
         queue.Enqueue(new BFSNode(start, 0));
-        while (queue.Count > 0)
+        while (queue.Count > 0 && queue.Count < 100) //this has some very bad performance issues
         {
             BFSNode node = queue.Dequeue();
             Vector3 pos = node.Position;

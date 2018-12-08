@@ -73,7 +73,7 @@ public class MatchManager : MonoBehaviour
     }
 
     // helper function for detecting if position is open
-    public bool IsOpen(Vector3 position, bool includeTerritory)
+    private bool IsOpen(Vector3 position, bool includeTerritory)
     {
         return (
             !player1.positions.Contains(position) &&

@@ -19,6 +19,7 @@ public class KeyboardAgent : Agent {
 
     public void Start()
     {
+        this.direction = Vector3.left;
         queuedDirection = this.direction;
     }
 
