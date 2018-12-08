@@ -87,7 +87,7 @@ public class MatchManager : MonoBehaviour
     }
 
     // helper function for detecting if position is a crash
-    bool IsCrash(Vector3 position)
+   private bool IsCrash(Vector3 position)
     {
         return (
             player1.positions.Contains(position) ||
@@ -97,7 +97,7 @@ public class MatchManager : MonoBehaviour
     }
 
     // helper function for hurting a player
-    void Hurt(Agent player)
+    private void Hurt(Agent player)
     {
         // lose length unless powered up
         if (player.powerTurns < 1)
@@ -110,7 +110,7 @@ public class MatchManager : MonoBehaviour
         }
     }
 
-    void ClearTerritory(Agent player)
+    private void ClearTerritory(Agent player)
     {
         foreach (GameObject g in player.territoryBlocks)
         {
@@ -120,7 +120,7 @@ public class MatchManager : MonoBehaviour
         player.territoryBlocks.Clear();
     }
 
-    void AddTerritory(Agent player)
+    private void AddTerritory(Agent player)
     {
         foreach (Vector3 pos in player.positions)
         {
@@ -147,12 +147,12 @@ public class MatchManager : MonoBehaviour
         }
     }
 
-    void spawnFood() {
+    private void spawnFood() {
         int numFood = foodPositions.Count;
         if (numFood == 0 || Random.Range(0f, 1f) < foodSpawnRate && numFood < maxFood) {
             Vector3 foodPosition = map.GetRandomPosition();
             if (IsOpen(foodPosition, true)) {
-                GameObject newFood = Instantiate(foodPrefab, foodPosition, Quaternion.identity);
+                Instantiate(foodPrefab, foodPosition, Quaternion.identity);
                 //Debug.Log("New food at " + newFood.transform.position.ToString());
                 foodPositions.Add(foodPosition);
             }
@@ -161,13 +161,13 @@ public class MatchManager : MonoBehaviour
         if (Random.Range(0f, 1f) < powerUpSpawnRate && powerUpPositions.Count < maxPowerUp) {
             Vector3 powerUpPosition = map.GetRandomPosition();
             if (IsOpen(powerUpPosition, false)) {
-                GameObject newPowerUp = Instantiate(powerUpPrefab, powerUpPosition, Quaternion.identity);
+                Instantiate(powerUpPrefab, powerUpPosition, Quaternion.identity);
                 powerUpPositions.Add(powerUpPosition);
             }
         }
     }
     // what happens each timestep
-    void Repeat()
+    private void Repeat()
     {
         // spawn new food
         spawnFood();
