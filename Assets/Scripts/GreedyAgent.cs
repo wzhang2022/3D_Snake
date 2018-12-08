@@ -25,7 +25,7 @@ public class GreedyAgent : Agent
         }
         foreach (Vector3 goal in goals)
         {
-            if (target == Vector3.zero || this.MDist(target, head) > this.MDist(goal, head))
+            if (target == Vector3.zero || MDist(target, head) > MDist(goal, head))
             {
                 target = goal;
             }
@@ -46,10 +46,10 @@ public class GreedyAgent : Agent
         Vector3[] moves = this.FindSafeMoves();
         // select move on path to target
         Vector3 bestMove = moves[0];
-        float bestDist = this.MDist(head + bestMove, target);
+        float bestDist = MDist(head + bestMove, target);
         foreach (Vector3 move in moves)
         {
-            float dist = this.MDist(head + move, target);
+            float dist = MDist(head + move, target);
             if (dist <= bestDist)
             {
                 bestMove = move;
@@ -57,5 +57,8 @@ public class GreedyAgent : Agent
             }
         }
         return bestMove;
+    }
+    private static float MDist(Vector3 a, Vector3 b) {
+        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) + Mathf.Abs(a.z - b.z);
     }
 }

@@ -121,11 +121,6 @@ public abstract class Agent : MonoBehaviour {
         body.Add(new_object);
     }
 
-    // manhattan distance between two points
-    public float MDist(Vector3 a, Vector3 b)
-    {
-        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) + Mathf.Abs(a.z - b.z);
-    }
 
     // recieve movement commands at every timestep
     public virtual void Update()
