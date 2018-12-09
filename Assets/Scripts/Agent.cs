@@ -14,7 +14,7 @@ public abstract class Agent : MonoBehaviour {
     public MatchManager matchManager;
 
     // data
-    public ArrayList body = new ArrayList();
+    public List<GameObject> body = new List<GameObject>();
     public HashSet<Vector3> positions = new HashSet<Vector3>();
     // TERRITORY NOT BEING USED RIGHT NOW
     public HashSet<Vector3> territory = new HashSet<Vector3>();
@@ -35,7 +35,7 @@ public abstract class Agent : MonoBehaviour {
 
     void Start () {
         direction2D = direction;
-        body = new ArrayList();
+        body = new List<GameObject>();
         // obtain reference to match manager script to access game state
         GameObject managerObject = GameObject.Find("MatchManager");
         matchManager = managerObject.GetComponent<MatchManager>();
@@ -71,7 +71,7 @@ public abstract class Agent : MonoBehaviour {
         }
 
         // handle length reductions
-        while (body.Count >= length)
+        while (body.Count > length)
         {
             GameObject end = (GameObject)body[0];
             body.RemoveAt(0);
@@ -143,9 +143,6 @@ public abstract class Agent : MonoBehaviour {
     }
 
     protected bool IsOpen(Vector3 pos) { //checks if anything is in the square
-        Debug.Log(this.ToString());
-        Debug.Log(pos);
-        Debug.Log(this.positions.Contains(pos));
         return !this.positions.Contains(pos) && // self
                !matchManager.wallPositions.Contains(pos) && // walls
                (0 <= (pos).y) && (pos).y <= 1; // within layer boundaries
@@ -155,6 +152,10 @@ public abstract class Agent : MonoBehaviour {
         return this.powerTurns > 1 ||
                (!opponent.positions.Contains(pos) && // other player
                pos != opponent.NextMove()); // head collisions
+    }
+
+    protected static float MDist(Vector3 a, Vector3 b) {
+        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) + Mathf.Abs(a.z - b.z);
     }
 
     // decide what move to take, returns a Vector3

@@ -11,7 +11,7 @@ public class SearchAgent : Agent
     HashSet<Vector3> FindGoals()
     {
         // food and powerups are goals
-        Debug.Log(this.matchManager);
+        //Debug.Log(this.matchManager);
         HashSet<Vector3> goals = new HashSet<Vector3>(this.matchManager.foodPositions);
         goals.UnionWith(this.matchManager.powerUpPositions);
         // if currently powered up, so is the other player's body
@@ -60,13 +60,14 @@ public class SearchAgent : Agent
         {
             return 0;
         }
+        int counter = 0; //use this to limit how far to search in BFS
 
         Vector3[] moves = new[] { Vector3.left, Vector3.right, Vector3.up, Vector3.down, Vector3.forward, Vector3.back };
 
         HashSet<Vector3> visited = new HashSet<Vector3>();
         Queue<BFSNode> queue = new Queue<BFSNode>();
         queue.Enqueue(new BFSNode(start, 0));
-        while (queue.Count > 0 && queue.Count < 100) //this has some very bad performance issues
+        while (queue.Count > 0 && counter < 50) //limit depth of BFS, this has some very bad performance issues
         {
             BFSNode node = queue.Dequeue();
             Vector3 pos = node.Position;
@@ -74,6 +75,8 @@ public class SearchAgent : Agent
             visited.Add(pos);
             foreach (Vector3 move in moves)
             {
+                counter++;
+                //Debug.Log(counter);
                 Vector3 newPos = pos + move;
                 if (goals.Contains(newPos))
                 {
@@ -88,6 +91,9 @@ public class SearchAgent : Agent
         }
         Debug.Log("no goals reachable");
         return 99999; // no goals reachable
+    }
+    private float Heuristic(Vector3 currLocation, Vector3 target) {
+        return MDist(currLocation, target);
     }
 }
 
