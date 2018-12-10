@@ -1934,8 +1934,8 @@ GameObject:
   - component: {fileID: 1649160691}
   - component: {fileID: 1649160692}
   - component: {fileID: 1649160694}
-  - component: {fileID: 1649160695}
   - component: {fileID: 1649160687}
+  - component: {fileID: 1649160695}
   - component: {fileID: 1649160693}
   m_Layer: 0
   m_Name: Player2_head

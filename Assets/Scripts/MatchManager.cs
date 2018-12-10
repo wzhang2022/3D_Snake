@@ -103,7 +103,7 @@ public class MatchManager : MonoBehaviour
         if (player.powerTurns < 1)
         {
             // Debug.Log(player.powerTurns);
-            if (player.length <= 3) {
+            if (player.length < 3) {
                 player.length = 1;
             }
             player.length = player.length - player.length / 3;

@@ -36,6 +36,7 @@ public abstract class Agent : MonoBehaviour {
     void Start () {
         direction2D = direction;
         body = new List<GameObject>();
+   
         // obtain reference to match manager script to access game state
         GameObject managerObject = GameObject.Find("MatchManager");
         matchManager = managerObject.GetComponent<MatchManager>();
