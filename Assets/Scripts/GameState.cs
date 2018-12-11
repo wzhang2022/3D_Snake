@@ -125,7 +125,7 @@ public class SimplifiedAgent {
     public int powerTurns;
     public SimplifiedAgent(Agent player) {
         bodyPositions = new List<Vector3>();
-        foreach (GameObject body in player.body ?? Enumerable.Empty<GameObject>()) {
+        foreach (GameObject body in player.body) {
             bodyPositions.Add(body.transform.position);
         }
         headPosition = player.head.transform.position;
