@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ExpectimaxAgent : Agent {
     public MatchManager m;
-    public int expectimaxDepth = 5;
+    public int expectimaxDepth = 0;
 
     public void Start() {
         // obtain reference to match manager script to access game state
@@ -14,41 +14,51 @@ public class ExpectimaxAgent : Agent {
         // Debug.Log(m.ToString());
     }
     public override Vector3 DecideMove(Agent otherplayer) {
-        GameState currState = new GameState(m.wallPositions, m.powerUpPositions, m.foodPositions, this, this.opponent);
+        // save reference to opponent
+        opponent = otherplayer;
+
+        // this agent will visualize itself as player 1 always
+        GameState currState = new GameState(m.wallPositions, m.powerUpPositions, m.foodPositions, this, otherplayer);
+
         float val = -Mathf.Infinity;
         Vector3 bestMove = Vector3.left;
         Vector3[] validMoves = FindSafeMoves();
+        // Debug.Log(currState.NextState(validMoves[0], Vector3.zero));
         foreach (Vector3 move in validMoves) {
-            float newVal = MaxValue(currState.NextState(move, Vector3.zero), 0, 8);
+            GameState nextState = currState.NextState(move, Vector3.zero);
+            float newVal = OpponentMoveValue(nextState, expectimaxDepth);
             if (newVal > val) {
                 bestMove = move;
                 val = newVal;
             }
         }
+        Debug.Log(val);
         return bestMove;
     }
     //returns the best move, calculated by expectimax, of the agent given the game state
-    private float MaxValue(GameState state, int index, int depth) {
+    private float OurMoveValue(GameState state, int depth) {
         if (depth == 0) {
             return Utility(state);
         }
-        Vector3[] moves = FindSafeMoves();
+        Vector3[] moves = state.player1.ValidMoves(state);
         float val = -Mathf.Infinity;
         foreach (Vector3 move in moves) {
-            val = Mathf.Max(val, ExpectimaxValue(state.NextState(move, Vector3.zero), index, depth));
+            GameState nextState = state.NextState(move, Vector3.zero);
+            val = Mathf.Max(val, OpponentMoveValue(nextState, depth));
         }
         return val;
     }
 
-    // TODO: it would make sense to do minimax since it's an adversarial game
-    private float ExpectimaxValue(GameState state, int index, int depth) {
+    // TODO: it would make sense to do minimax (make opponent minimize instead of random) since it's an adversarial game
+    private float OpponentMoveValue(GameState state, int depth) {
         if (depth == 0) {
             return Utility(state);
         }
-        Vector3[] moves = FindSafeMoves();
+        Vector3[] moves = state.player2.ValidMoves(state);
         float expVal = 0;
         foreach (Vector3 move in moves) {
-            expVal += ExpectimaxValue(state.NextState(move, Vector3.zero), index, depth - 1);
+            GameState nextState  = state.NextState(Vector3.zero, move);
+            expVal += OurMoveValue(nextState, depth - 1);
         }
         expVal = expVal / moves.Length;
         return expVal;
@@ -78,7 +88,7 @@ public class ExpectimaxAgent : Agent {
     */
 
     private float Utility(GameState state) {
-        return this.length - this.opponent.length;
+        return state.player1.length - state.player2.length;
     }
 
 }

@@ -10,8 +10,8 @@ public class GameState {
     public HashSet<Vector3> walls;
     public HashSet<Vector3> powerups;
     public HashSet<Vector3> foods;
-    private SimplifiedAgent player1;
-    private SimplifiedAgent player2;
+    public SimplifiedAgent player1;
+    public SimplifiedAgent player2;
 
     public GameState(HashSet<Vector3> walls,
                      HashSet<Vector3> powerups,
@@ -54,7 +54,7 @@ public class GameState {
 
     //modifies agent1 and agent2
     private void ApplyMove(SimplifiedAgent agent1, SimplifiedAgent agent2,Vector3 move1, Vector3 move2, HashSet<Vector3> powerups, HashSet<Vector3> foods) {
-        Vector3[] moves = new[] { Vector3.left, Vector3.right, Vector3.up, Vector3.down, Vector3.forward, Vector3.back };
+        Vector3[] moves = new[] { Vector3.left, Vector3.right, Vector3.up, Vector3.down, Vector3.forward, Vector3.back, Vector3.zero };
         Debug.Assert(moves.Contains(move1), "move1 not valid input Vector3 move");
         Debug.Assert(moves.Contains(move2), "move2 not valid input Vector3 move");
         
@@ -66,8 +66,14 @@ public class GameState {
 
         bool headCollision = (nextPos1 == nextPos2);
 
-        ApplyMoveToAgentIfValid(agent1, agent2, nextPos1, headCollision);
-        ApplyMoveToAgentIfValid(agent2, agent1, nextPos2, headCollision);
+        if (move1 != Vector3.zero)
+        {
+            ApplyMoveToAgentIfValid(agent1, agent2, nextPos1, headCollision);
+        }
+        if (move2 != Vector3.zero)
+        {
+            ApplyMoveToAgentIfValid(agent2, agent1, nextPos2, headCollision);
+        }
 
         while (agent1.bodyPositions.Count >= agent1.length) {
             agent1.bodyPositions.RemoveAt(0);
@@ -87,9 +93,11 @@ public class GameState {
         } else {
             //move is valid
             if (foods.Contains(nextPos)) {
+                agent.length++;
                 foods.Remove(nextPos);
             }
             if (powerups.Contains(nextPos)) {
+                agent.powerTurns += 15; // GAME CONSTANT WAS LAZY
                 powerups.Remove(nextPos);
             }
             agent.bodyPositions.Add(nextPos);
@@ -97,7 +105,7 @@ public class GameState {
     }
 
     //returns true if a position is taken, with respect to the current GameState
-    private bool IsCrash(Vector3 position) {
+    public bool IsCrash(Vector3 position) {
         return (
             player1.bodyPositions.Contains(position) ||
             player2.bodyPositions.Contains(position) ||
@@ -140,5 +148,18 @@ public class SimplifiedAgent {
         headPosition = copy.headPosition;
         length = copy.length;
         powerTurns = copy.powerTurns;
+    }
+    public Vector3[] ValidMoves(GameState state)
+    {
+        Vector3[] moves = new[] { Vector3.left, Vector3.right, Vector3.up, Vector3.down, Vector3.forward, Vector3.back };
+        moves = moves.Where(move =>
+                !state.IsCrash(headPosition + move)).ToArray<Vector3>();
+        // Debug.Log(moves.Count());
+        if (moves.Count() == 0)
+        {
+            Debug.Log("No valid moves");
+            return new[] { Vector3.left };
+        }
+        return moves;
     }
 }
