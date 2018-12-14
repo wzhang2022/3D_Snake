@@ -60,14 +60,13 @@ public class SearchAgent : Agent
         {
             return 0;
         }
-        int counter = 0; //use this to limit how far to search in BFS
 
         Vector3[] moves = new[] { Vector3.left, Vector3.right, Vector3.up, Vector3.down, Vector3.forward, Vector3.back };
 
         HashSet<Vector3> visited = new HashSet<Vector3>();
         Queue<BFSNode> queue = new Queue<BFSNode>();
         queue.Enqueue(new BFSNode(start, 0));
-        while (queue.Count > 0 && counter < 50) //limit depth of BFS, this has some very bad performance issues
+        while (queue.Count > 0)
         {
             BFSNode node = queue.Dequeue();
             Vector3 pos = node.Position;
@@ -75,7 +74,6 @@ public class SearchAgent : Agent
             visited.Add(pos);
             foreach (Vector3 move in moves)
             {
-                counter++;
                 //Debug.Log(counter);
                 Vector3 newPos = pos + move;
                 if (goals.Contains(newPos))
@@ -84,6 +82,7 @@ public class SearchAgent : Agent
                 }
                 if (IsOpen(newPos) && IsSafe(newPos) && !visited.Contains(newPos))
                 {
+                    visited.Add(newPos);
                     queue.Enqueue(new BFSNode(newPos, dist + 1));
                     
                 }

@@ -40,6 +40,7 @@ public class ExpectimaxAgent : Agent {
         return val;
     }
 
+    // TODO: it would make sense to do minimax since it's an adversarial game
     private float ExpectimaxValue(GameState state, int index, int depth) {
         if (depth == 0) {
             return Utility(state);
@@ -77,7 +78,7 @@ public class ExpectimaxAgent : Agent {
     */
 
     private float Utility(GameState state) {
-        return this.length;
+        return this.length - this.opponent.length;
     }
 
 }
