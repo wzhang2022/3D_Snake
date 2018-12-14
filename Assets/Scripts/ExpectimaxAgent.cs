@@ -22,7 +22,7 @@ public class ExpectimaxAgent : Agent {
 
         float val = -Mathf.Infinity;
         Vector3 bestMove = Vector3.left;
-        Vector3[] validMoves = currState.player1.ValidMoves(currState); // TODO: CRASHING INTO WALLS CHECK THIS FUNCTION
+        Vector3[] validMoves = currState.player1.ValidMoves(currState);
         // Debug.Log(currState.NextState(validMoves[0], Vector3.zero));
         foreach (Vector3 move in validMoves) {
             GameState nextState = currState.NextState(move, Vector3.zero);

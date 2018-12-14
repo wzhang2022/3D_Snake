@@ -39,7 +39,7 @@ public class GameState {
     //returns the state that would result if player1 moved by move1 and player2 moved by move2
     public GameState NextState(Vector3 move1, Vector3 move2) {
         GameState nextState = new GameState(walls, powerups, foods, player1, player2);
-        nextState.ApplyMove(move1, move2); 
+        nextState.ApplyMove(move1, move2);
         return nextState;
     }
 
@@ -73,10 +73,10 @@ public class GameState {
             ApplyMoveToAgentIfValid(player2, player1, nextPos2, headCollision);
         }
 
-        while (player1.bodyPositions.Count >= player1.length) {
+        while (player1.bodyPositions.Count > player1.length) {
             player1.bodyPositions.RemoveAt(0);
         }
-        while (player2.bodyPositions.Count >= player2.length) {
+        while (player2.bodyPositions.Count > player2.length) {
             player2.bodyPositions.RemoveAt(0);
         }
     }
@@ -85,7 +85,7 @@ public class GameState {
         if (IsCrash(nextPos) || headCollision) {
             if (agent.powerTurns < 1) {
                 Hurt(agent);
-            } else if (opponent.bodyPositions.Contains(nextPos) || headCollision) { //checks if attacking player2
+            } else if (opponent.bodyPositions.Contains(nextPos) && agent.powerTurns > 0) { //checks if attacking player2
                 Hurt(opponent);
             }
         } else {
@@ -98,8 +98,10 @@ public class GameState {
                 agent.powerTurns += 15; // GAME CONSTANT WAS LAZY
                 powerups.Remove(nextPos);
             }
+            agent.bodyPositions.Add(agent.headPosition);
             agent.headPosition = nextPos;
             agent.bodyPositions.Add(nextPos);
+
         }
     }
 
@@ -108,6 +110,8 @@ public class GameState {
         return (
             player1.bodyPositions.Contains(position) ||
             player2.bodyPositions.Contains(position) ||
+            position.y > 1 ||
+            position.y < 0 ||
             walls.Contains(position)
         );
     }
