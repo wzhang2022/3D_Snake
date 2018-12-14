@@ -10,7 +10,7 @@ using UnityEngine;
     are properly updated.
         2.1. Need to define what rewards are (state.getValue() - prevState.getValue())
     3. In DecideMove, put in a random chance of picking a suboptimal move with prob epsilon
- */
+ 
 public class RLAgent : Agent
 {
     static Random rnd = new Random();
@@ -88,3 +88,4 @@ public class RLAgent : Agent
         }
     }
 }
+*/

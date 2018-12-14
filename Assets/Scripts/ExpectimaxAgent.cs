@@ -22,20 +22,22 @@ public class ExpectimaxAgent : Agent {
 
         float val = -Mathf.Infinity;
         Vector3 bestMove = Vector3.left;
-        Vector3[] validMoves = FindSafeMoves();
+        Vector3[] validMoves = currState.player1.ValidMoves(currState); // TODO: CRASHING INTO WALLS CHECK THIS FUNCTION
         // Debug.Log(currState.NextState(validMoves[0], Vector3.zero));
         foreach (Vector3 move in validMoves) {
             GameState nextState = currState.NextState(move, Vector3.zero);
-            float newVal = OpponentMoveValue(nextState, expectimaxDepth);
+            float newVal = OpponentMoveValue(nextState, expectimaxDepth - 1);
             if (newVal > val) {
+
                 bestMove = move;
                 val = newVal;
             }
         }
-        Debug.Log(val);
+        // Debug.Log(val);
         return bestMove;
     }
     //returns the best move, calculated by expectimax, of the agent given the game state
+    // TODO: use greedy heuristic if there is no best move
     private float OurMoveValue(GameState state, int depth) {
         if (depth == 0) {
             return Utility(state);
@@ -44,13 +46,14 @@ public class ExpectimaxAgent : Agent {
         float val = -Mathf.Infinity;
         foreach (Vector3 move in moves) {
             GameState nextState = state.NextState(move, Vector3.zero);
-            val = Mathf.Max(val, OpponentMoveValue(nextState, depth));
+            val = Mathf.Max(val, OpponentMoveValue(nextState, depth - 1));
         }
         return val;
     }
 
     // TODO: it would make sense to do minimax (make opponent minimize instead of random) since it's an adversarial game
     private float OpponentMoveValue(GameState state, int depth) {
+        // return OurMoveValue(state, depth - 1); // testing: pretend opponent never moves
         if (depth == 0) {
             return Utility(state);
         }
@@ -58,7 +61,7 @@ public class ExpectimaxAgent : Agent {
         float expVal = 0;
         foreach (Vector3 move in moves) {
             GameState nextState  = state.NextState(Vector3.zero, move);
-            expVal += OurMoveValue(nextState, depth - 1);
+            expVal += OurMoveValue(nextState, depth);
         }
         expVal = expVal / moves.Length;
         return expVal;

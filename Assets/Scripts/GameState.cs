@@ -18,9 +18,9 @@ public class GameState {
                      HashSet<Vector3> foods,
                      Agent player1,
                      Agent player2) {
-        this.walls = walls;
-        this.powerups = powerups;
-        this.foods = foods;
+        this.walls = new HashSet<Vector3>(walls);
+        this.powerups = new HashSet<Vector3>(powerups);
+        this.foods = new HashSet<Vector3>(foods);
         this.player1 = new SimplifiedAgent(player1);
         this.player2 = new SimplifiedAgent(player2);
     }
@@ -29,20 +29,18 @@ public class GameState {
                      HashSet<Vector3> foods,
                      SimplifiedAgent agent1,
                      SimplifiedAgent agent2) {
-        this.walls = walls;
-        this.powerups = powerups;
-        this.foods = foods;
-        this.player1 = agent1;
-        this.player2 = agent2;
+        this.walls = new HashSet<Vector3>(walls);
+        this.powerups = new HashSet<Vector3>(powerups);
+        this.foods = new HashSet<Vector3>(foods);
+        this.player1 = new SimplifiedAgent(agent1); ;
+        this.player2 = new SimplifiedAgent(agent2); ;
     }
+
     //returns the state that would result if player1 moved by move1 and player2 moved by move2
     public GameState NextState(Vector3 move1, Vector3 move2) {
-        SimplifiedAgent nextAgent1 = new SimplifiedAgent(player1);
-        SimplifiedAgent nextAgent2 = new SimplifiedAgent(player2);
-        HashSet<Vector3> nextPowerups = new HashSet<Vector3>(powerups);
-        HashSet<Vector3> nextFoods = new HashSet<Vector3>(foods);
-        ApplyMove(nextAgent1, nextAgent2, move1, move2, nextPowerups, nextFoods); 
-        return new GameState(walls, nextPowerups, nextFoods, nextAgent1, nextAgent2);
+        GameState nextState = new GameState(walls, powerups, foods, player1, player2);
+        nextState.ApplyMove(move1, move2); 
+        return nextState;
     }
 
     private void Hurt(SimplifiedAgent agent) {
@@ -53,33 +51,33 @@ public class GameState {
     }
 
     //modifies agent1 and agent2
-    private void ApplyMove(SimplifiedAgent agent1, SimplifiedAgent agent2,Vector3 move1, Vector3 move2, HashSet<Vector3> powerups, HashSet<Vector3> foods) {
+    private void ApplyMove(Vector3 move1, Vector3 move2) {
         Vector3[] moves = new[] { Vector3.left, Vector3.right, Vector3.up, Vector3.down, Vector3.forward, Vector3.back, Vector3.zero };
         Debug.Assert(moves.Contains(move1), "move1 not valid input Vector3 move");
         Debug.Assert(moves.Contains(move2), "move2 not valid input Vector3 move");
         
-        agent1.powerTurns = Mathf.Max(agent1.powerTurns - 1, 0);
-        agent2.powerTurns = Mathf.Max(agent2.powerTurns - 1, 0);
+        player1.powerTurns = Mathf.Max(player1.powerTurns - 1, 0);
+        player2.powerTurns = Mathf.Max(player2.powerTurns - 1, 0);
 
-        Vector3 nextPos1 = agent1.headPosition + move1;
-        Vector3 nextPos2 = agent2.headPosition + move2;
+        Vector3 nextPos1 = player1.headPosition + move1;
+        Vector3 nextPos2 = player2.headPosition + move2;
 
         bool headCollision = (nextPos1 == nextPos2);
 
         if (move1 != Vector3.zero)
         {
-            ApplyMoveToAgentIfValid(agent1, agent2, nextPos1, headCollision);
+            ApplyMoveToAgentIfValid(player1, player2, nextPos1, headCollision);
         }
         if (move2 != Vector3.zero)
         {
-            ApplyMoveToAgentIfValid(agent2, agent1, nextPos2, headCollision);
+            ApplyMoveToAgentIfValid(player2, player1, nextPos2, headCollision);
         }
 
-        while (agent1.bodyPositions.Count >= agent1.length) {
-            agent1.bodyPositions.RemoveAt(0);
+        while (player1.bodyPositions.Count >= player1.length) {
+            player1.bodyPositions.RemoveAt(0);
         }
-        while (agent2.bodyPositions.Count >= agent2.length) {
-            agent2.bodyPositions.RemoveAt(0);
+        while (player2.bodyPositions.Count >= player2.length) {
+            player2.bodyPositions.RemoveAt(0);
         }
     }
 
@@ -100,6 +98,7 @@ public class GameState {
                 agent.powerTurns += 15; // GAME CONSTANT WAS LAZY
                 powerups.Remove(nextPos);
             }
+            agent.headPosition = nextPos;
             agent.bodyPositions.Add(nextPos);
         }
     }
@@ -154,7 +153,6 @@ public class SimplifiedAgent {
         Vector3[] moves = new[] { Vector3.left, Vector3.right, Vector3.up, Vector3.down, Vector3.forward, Vector3.back };
         moves = moves.Where(move =>
                 !state.IsCrash(headPosition + move)).ToArray<Vector3>();
-        // Debug.Log(moves.Count());
         if (moves.Count() == 0)
         {
             Debug.Log("No valid moves");
