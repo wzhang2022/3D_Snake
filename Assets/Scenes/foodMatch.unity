@@ -1776,6 +1776,7 @@ GameObject:
   - component: {fileID: 1594805645}
   - component: {fileID: 1594805644}
   - component: {fileID: 1594805648}
+  - component: {fileID: 1594805651}
   - component: {fileID: 1594805643}
   - component: {fileID: 1594805649}
   - component: {fileID: 1594805650}
@@ -1940,6 +1941,27 @@ MonoBehaviour:
   body: []
   length: 5
   powerTurns: 0
+--- !u!114 &1594805651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1594805642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55f5f046c2d8ec9419c03a18a9d4a761, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  head: {fileID: 1594805642}
+  bodyPrefab: {fileID: 1137459855221860, guid: 3d3eb448d5a80a04e9de33569778940d, type: 2}
+  powerUpMaterial: {fileID: 2100000, guid: 90f547bcd6b36d548a3d4e5403fd783d, type: 2}
+  headMarkerMaterial: {fileID: 2100000, guid: 4591c98bebdb24d4583d7222a768750d, type: 2}
+  territoryPrefab: {fileID: 1137459855221860, guid: 181b8591b48581b4593e98fd11eea2a8,
+    type: 2}
+  matchManager: {fileID: 0}
+  body: []
+  length: 5
+  powerTurns: 0
 --- !u!1 &1643046987
 GameObject:
   m_ObjectHideFlags: 0
@@ -1968,10 +1990,10 @@ GameObject:
   - component: {fileID: 1649160691}
   - component: {fileID: 1649160692}
   - component: {fileID: 1649160696}
+  - component: {fileID: 1649160695}
   - component: {fileID: 1649160687}
   - component: {fileID: 1649160694}
   - component: {fileID: 1649160693}
-  - component: {fileID: 1649160695}
   m_Layer: 0
   m_Name: Player2_head
   m_TagString: Untagged
@@ -1985,7 +2007,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1649160686}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55f5f046c2d8ec9419c03a18a9d4a761, type: 3}
   m_Name: 
@@ -2089,7 +2111,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1649160686}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 470e9995399b2f5429260b6d796fbdd7, type: 3}
   m_Name: 
@@ -2118,7 +2140,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1649160686}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30dc451c8c6748b469dd85285b7d0a7d, type: 3}
   m_Name: 
@@ -2139,7 +2161,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1649160686}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4bb9a33378003d4478fd44ea6e28a647, type: 3}
   m_Name: 
@@ -2286,7 +2308,7 @@ MonoBehaviour:
   territoryOn: 0
   territoryDoubleLayer: 0
   territoryPermanent: 0
-  player1: {fileID: 1594805643}
+  player1: {fileID: 1594805651}
   player2: {fileID: 1649160696}
   foodPrefab: {fileID: 1684524527812884, guid: 40d75ded267258348a60299068f95d10, type: 2}
   powerUpPrefab: {fileID: 1989851686697500, guid: c13d5fbe6e6b25d459c2589b5e587f10,
