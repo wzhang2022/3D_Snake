@@ -36,7 +36,7 @@ public class MatchManager : MonoBehaviour
     public GameObject tieText;
 
     // TODO: create a generic map class for fancy map selection?/
-    public BasicMap map;
+    public Map map;
 
     // game data
     public HashSet<Vector3> wallPositions = new HashSet<Vector3>();

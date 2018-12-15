@@ -90,8 +90,33 @@ public class ExpectimaxAgent : Agent {
                 return e
     */
 
+     // assume that player2 is the expectimax agent
     private float Utility(GameState state) {
-        return state.player1.length - state.player2.length;
+        float lengthDifference = -state.player1.length + state.player2.length;
+        float distToTarget = DistToTarget(state);
+        return lengthDifference + distToTarget * 0.1f;
     }
 
+    private float DistToTarget(GameState state) {
+        Vector3 target = FindTarget(state);
+        return MDist(target, state.player2.headPosition);
+    }
+
+    private Vector3 FindTarget(GameState state) {
+        Vector3 target = new Vector3(0, 0, 0);
+        Vector3 head = state.player2.headPosition;
+        // food and powerups are goals
+        HashSet<Vector3> goals = new HashSet<Vector3>(state.foods);
+        goals.UnionWith(state.powerups);
+        // if currently powered up, so is the other player's body
+        if (state.player2.powerTurns> 1) {
+            goals.UnionWith(state.player1.bodyPositions);
+        }
+        foreach (Vector3 goal in goals) {
+            if (target == Vector3.zero || MDist(target, head) > MDist(goal, head)) {
+                target = goal;
+            }
+        }
+        return target;
+    }
 }

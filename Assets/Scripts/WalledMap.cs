@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// class for creating a rectangular map
-public class BasicMap : Map {
+public class WalledMap : Map {
     // size parameters
     public int minX = -10;
     public int maxX = 10;
@@ -32,6 +31,8 @@ public class BasicMap : Map {
         RightWall.localRotation = Quaternion.Euler(0, 0, 0);
         RightWall.localScale = new Vector3(1, 3, maxZ - minZ);
 
+
+
         FrontWall.localPosition = new Vector3((maxX + minX) / 2, 0, minZ);
         FrontWall.localRotation = Quaternion.Euler(0, 0, 0);
         FrontWall.localScale = new Vector3(maxX - minX, 3, 1);
@@ -39,36 +40,38 @@ public class BasicMap : Map {
         BackWall.localPosition = new Vector3((maxX + minX) / 2, 0, maxZ);
         BackWall.localRotation = Quaternion.Euler(0, 0, 0);
         BackWall.localScale = new Vector3(maxX - minX, 3, 1);
+
     }
 
-    public override HashSet<Vector3> GetWallPositions()
-    {
+    public override HashSet<Vector3> GetWallPositions() {
         HashSet<Vector3> wallPositions = new HashSet<Vector3>();
-        for (int x = minX; x <= maxX; x++)
-        {
+        for (int x = minX; x <= maxX; x++) {
             wallPositions.Add(new Vector3(x, 0, maxZ));
             wallPositions.Add(new Vector3(x, 1, maxZ));
             wallPositions.Add(new Vector3(x, 0, minZ));
             wallPositions.Add(new Vector3(x, 1, minZ));
         }
-        for (int z = minZ; z <= maxZ; z++)
-        {
+        for (int z = minZ; z <= maxZ; z++) {
             wallPositions.Add(new Vector3(minX, 0, z));
             wallPositions.Add(new Vector3(minX, 1, z));
             wallPositions.Add(new Vector3(maxX, 0, z));
             wallPositions.Add(new Vector3(maxX, 1, z));
         }
+        for (int z = minZ / 2; z <= maxZ / 2; z++) {
+            Transform MiddleWall = Instantiate(wallPrefab, this.gameObject.transform, true).transform;
+            wallPositions.Add(new Vector3(0, 1, z));
+            wallPositions.Add(new Vector3(0, 0, z));
+            MiddleWall.localPosition = new Vector3(0, 0, z);
+            MiddleWall.localRotation = Quaternion.Euler(0, 0, 0);
+            MiddleWall.localScale = new Vector3(1, 3, 1);
+        }
         return wallPositions;
     }
 
-    public override Vector3 GetRandomPosition()
-    {
-        int x = Random.Range(minX+1, maxX);
+    public override Vector3 GetRandomPosition() {
+        int x = Random.Range(minX + 1, maxX);
         int y = Random.Range(0, 2);
         int z = Random.Range(minZ + 1, maxZ);
         return new Vector3(x, y, z);
     }
-
-
-    // Update is called once per frame
 }

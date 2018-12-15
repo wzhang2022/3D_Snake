@@ -1084,6 +1084,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1120708751}
+  - component: {fileID: 1120708754}
+  - component: {fileID: 1120708753}
   - component: {fileID: 1120708752}
   m_Layer: 0
   m_Name: BasicMap
@@ -1115,9 +1117,41 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1120708750}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c2788a4f120444f45a91561753686eb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minX: -5
+  maxX: 5
+  minZ: -5
+  maxZ: 5
+  wallPrefab: {fileID: 1147152177220324, guid: d2bf35e48660e984eb9fd9921ace420e, type: 2}
+--- !u!114 &1120708753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1120708750}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a493722557affc845a46c3c0dd92b12f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minX: -5
+  maxX: 5
+  minZ: -5
+  maxZ: 5
+  wallPrefab: {fileID: 1147152177220324, guid: d2bf35e48660e984eb9fd9921ace420e, type: 2}
+--- !u!114 &1120708754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1120708750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faa74fa5050b35b49852598a30e65b4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   minX: -5
@@ -2141,7 +2175,7 @@ MonoBehaviour:
   length: 5
   powerTurns: 0
   m: {fileID: 0}
-  expectimaxDepth: 5
+  expectimaxDepth: 3
 --- !u!1 &1872821678
 GameObject:
   m_ObjectHideFlags: 0
@@ -2262,7 +2296,7 @@ MonoBehaviour:
   player1WinsText: {fileID: 1521604295}
   player2WinsText: {fileID: 760211610}
   tieText: {fileID: 364699315}
-  map: {fileID: 1120708752}
+  map: {fileID: 1120708754}
 --- !u!4 &1891107136
 Transform:
   m_ObjectHideFlags: 0
