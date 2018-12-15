@@ -94,7 +94,7 @@ public class ExpectimaxAgent : Agent {
     private float Utility(GameState state) {
         float lengthDifference = -state.player1.length + state.player2.length;
         float distToTarget = DistToTarget(state);
-        return lengthDifference + distToTarget * 0.1f;
+        return -lengthDifference + distToTarget * 0.1f;
     }
 
     private float DistToTarget(GameState state) {
