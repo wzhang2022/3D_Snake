@@ -10,6 +10,7 @@ public class WalledMap : Map {
     public int maxZ = 10;
     // wall cube prefab
     public GameObject wallPrefab;
+    private HashSet<Vector3> wallPositions;
 
     // Use this for initialization
     protected override void Start() {
@@ -44,7 +45,7 @@ public class WalledMap : Map {
     }
 
     public override HashSet<Vector3> GetWallPositions() {
-        HashSet<Vector3> wallPositions = new HashSet<Vector3>();
+        wallPositions = new HashSet<Vector3>();
         for (int x = minX; x <= maxX; x++) {
             wallPositions.Add(new Vector3(x, 0, maxZ));
             wallPositions.Add(new Vector3(x, 1, maxZ));
@@ -69,9 +70,13 @@ public class WalledMap : Map {
     }
 
     public override Vector3 GetRandomPosition() {
-        int x = Random.Range(minX + 1, maxX);
-        int y = Random.Range(0, 2);
-        int z = Random.Range(minZ + 1, maxZ);
-        return new Vector3(x, y, z);
+        Vector3 pos = Vector3.zero;
+        do {
+            int x = Random.Range(minX + 1, maxX);
+            int y = Random.Range(0, 2);
+            int z = Random.Range(minZ + 1, maxZ);
+            pos = new Vector3(x, y, z);
+        } while (!wallPositions.Contains(pos));
+        return pos;
     }
 }

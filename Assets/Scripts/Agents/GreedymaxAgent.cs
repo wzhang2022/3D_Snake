@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExpectimaxAgent : Agent {
+public class GreedymaxAgent : Agent {
     public MatchManager m;
-    public int expectimaxDepth = 0;
+    public int greedymaxDepth = 0;
 
     public void Start() {
         // obtain reference to match manager script to access game state
@@ -26,7 +26,7 @@ public class ExpectimaxAgent : Agent {
         // Debug.Log(currState.NextState(validMoves[0], Vector3.zero));
         foreach (Vector3 move in validMoves) {
             GameState nextState = currState.NextState(move, Vector3.zero);
-            float newVal = OpponentMoveValue(nextState, expectimaxDepth - 1);
+            float newVal = OpponentMoveValue(nextState, greedymaxDepth - 1);
             if (newVal > val) {
 
                 bestMove = move;
@@ -51,29 +51,44 @@ public class ExpectimaxAgent : Agent {
         return val;
     }
 
-    // TODO: it would make sense to do minimax (make opponent minimize instead of random) since it's an adversarial game
+    // TODO: Assume that opponent picks a move greedily, opponent is player 1
     private float OpponentMoveValue(GameState state, int depth) {
         // return OurMoveValue(state, depth - 1); // testing: pretend opponent never moves
         if (depth == 0) {
             return Utility(state);
         }
-        Vector3[] moves = state.player2.ValidMoves(state);
-        float expVal = 0;
-        foreach (Vector3 move in moves) {
-            GameState nextState  = state.NextState(Vector3.zero, move);
-            expVal += OurMoveValue(nextState, depth);
+        HashSet<Vector3> targets = new HashSet<Vector3>(state.foods);
+        targets.UnionWith(state.powerups);
+        if (state.player1.powerTurns > 1) {
+            targets.UnionWith(state.player2.bodyPositions);
         }
-        expVal = expVal / moves.Length;
-        return expVal;
+        Vector3 bestTarget = Vector3.zero;
+        Vector3 head = state.player1.headPosition;
+        foreach (Vector3 target in targets) {
+            if (MDist(target, head) < MDist(bestTarget, head)) {
+                bestTarget = target;
+            }
+        }
+        Vector3[] moves = state.player2.ValidMoves(state);
+        Vector3 bestMove = Vector3.left;
+        if (moves.Length > 0) {
+            bestMove = moves[0];
+        }
+        foreach (Vector3 move in moves) {
+            if (MDist(move + head, bestTarget) < MDist(bestMove + head, bestTarget)) {
+                bestMove = move;
+            }
+        }
+        GameState nextState = state.NextState(Vector3.zero, bestMove);
+        return OurMoveValue(nextState, depth); ;
     }
-
     // assume that player2 is the expectimax agent
     private float Utility(GameState state) {
         float lengthDifference = -state.player1.length + state.player2.length;
         float distToTarget = DistToTarget(state);
         float powerTurns = state.player2.powerTurns;
         float distBetweenPlayers = MDist(state.player1.headPosition, state.player2.headPosition);
-        return -100 * lengthDifference - distToTarget * 0.3f + powerTurns * 0.2f - distBetweenPlayers * 0.1f;
+        return -100*lengthDifference - distToTarget * 0.3f + powerTurns * 0.2f - distBetweenPlayers*0.1f;
     }
 
     private float DistToTarget(GameState state) {
