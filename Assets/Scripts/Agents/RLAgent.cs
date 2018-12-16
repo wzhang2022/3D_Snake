@@ -21,8 +21,21 @@ public class RLAgent : Agent
     float epsilon = 0.05;
     float gamma = 0.8;
 
-    public override Vector3 DecideMove(GameState state) {
+    public MatchManager m;
+
+    // Look into this later
+    public void Start() {
+        // obtain reference to match manager script to access game state
+        GameObject managerObject = GameObject.Find("MatchManager");
+        m = managerObject.GetComponent<MatchManager>();
+        // Debug.Log(m.ToString());
+    }
+
+    public override Vector3 DecideMove(Agent otherplayer) {
         Vector3[] validMoves = FindSafeMoves();
+
+        // this agent will visualize itself as player 1 always
+        GameState state = new GameState(m.wallPositions, m.powerUpPositions, m.foodPositions, this, otherplayer);
 
         // with prob epsilon, pick a random valid move
         if (rnd.NextDouble() < epsilon) {
@@ -79,6 +92,7 @@ public class RLAgent : Agent
 
         // syntax to add features to dictionary:
         // features.Add("closest_food", 1.0);
+        // weights.Add("closest_food", 1.0);
 
         return features;
     }
