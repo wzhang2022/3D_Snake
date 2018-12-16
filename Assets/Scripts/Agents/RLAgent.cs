@@ -6,9 +6,9 @@ using UnityEngine;
 /*
     TODO
     1. Determine features
-    2. Still need to call UpdateWeights (probably at the end of PrepareNextMove) so that weights
+    2. Still need to call UpdateWeights (probably at the end of PrepareNextMove or Decidemove) so that weights
     are properly updated.
-        2.1. Need to define what rewards are (state.getValue() - prevState.getValue())
+        2.1. Need to define what rewards are: (state.getValue() - prevState.getValue())
 */
  
 public class RLAgent : Agent
