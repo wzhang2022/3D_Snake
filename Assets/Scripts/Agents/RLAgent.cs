@@ -9,14 +9,14 @@ using UnityEngine;
     2. Still need to call UpdateWeights (probably at the end of PrepareNextMove) so that weights
     are properly updated.
         2.1. Need to define what rewards are (state.getValue() - prevState.getValue())
-    3. In DecideMove, put in a random chance of picking a suboptimal move with prob epsilon
+*/
  
 public class RLAgent : Agent
 {
     static Random rnd = new Random();
     Dictionary<string, float> weights = new Dictionary<string, float>();
 
-    // learning rate, exploration rate, and discount factor (open for tweaking)
+    // learning rate, exploration rate, and discount factor
     float alpha = 0.2;
     float epsilon = 0.05;
     float gamma = 0.8;
@@ -24,8 +24,13 @@ public class RLAgent : Agent
     public override Vector3 DecideMove(GameState state) {
         Vector3[] validMoves = FindSafeMoves();
 
-        // with prob epsilon, pick a random valid move. Else, 
-        return GetActionFromQValues(state);
+        // with prob epsilon, pick a random valid move
+        if (rnd.NextDouble() < epsilon) {
+            int r = rnd.Next(validMoves.Count);
+            return validMoves[r];
+        } else {
+            return GetActionFromQValues(state);
+        }
     }
 
     private float GetValueFromQValues(GameState state) {
@@ -88,4 +93,3 @@ public class RLAgent : Agent
         }
     }
 }
-*/
