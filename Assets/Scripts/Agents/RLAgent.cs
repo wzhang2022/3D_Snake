@@ -13,13 +13,13 @@ using UnityEngine;
  
 public class RLAgent : Agent
 {
-    static Random rnd = new Random();
+    public static System.Random rnd = new System.Random();
     Dictionary<string, float> weights = new Dictionary<string, float>();
 
     // learning rate, exploration rate, and discount factor
-    float alpha = 0.2;
-    float epsilon = 0.05;
-    float gamma = 0.8;
+    float alpha = 0.2f;
+    float epsilon = 0.05f;
+    float gamma = 0.8f;
 
     public MatchManager m;
 
@@ -38,8 +38,8 @@ public class RLAgent : Agent
         GameState state = new GameState(m.wallPositions, m.powerUpPositions, m.foodPositions, this, otherplayer);
 
         // with prob epsilon, pick a random valid move
-        if (rnd.NextDouble() < epsilon) {
-            int r = rnd.Next(validMoves.Count);
+        if ((float)rnd.NextDouble() < epsilon) {
+            int r = rnd.Next(validMoves.Length);
             return validMoves[r];
         } else {
             return GetActionFromQValues(state);
@@ -53,7 +53,7 @@ public class RLAgent : Agent
         // Calculate best value from QValues
         foreach (Vector3 move in validMoves) {
             float value = EvaluateQValue(state, move);
-            best_value = Math.Max(best_value, value);
+            best_value = Mathf.Max(best_value, value);
         }
 
         return best_value;
@@ -61,7 +61,7 @@ public class RLAgent : Agent
     private Vector3 GetActionFromQValues(GameState state) {
         Vector3[] validMoves = FindSafeMoves();
         List<Vector3> bestMoves = new List<Vector3>();
-        float best_value = GetValueFromQValues();
+        float best_value = GetValueFromQValues(state);
 
         // Calculate best action
         foreach (Vector3 move in validMoves) {
@@ -76,7 +76,7 @@ public class RLAgent : Agent
     }
 
     private float EvaluateQValue(GameState state, Vector3 move) {
-        q_value = 0;
+        float q_value = 0;
         Dictionary<string, float> features = GetFeatures(state, move);
 
         foreach (KeyValuePair<string, float> kvp in features) {
@@ -86,7 +86,7 @@ public class RLAgent : Agent
         return q_value;
     }
 
-    private Hashtable GetFeatures(GameState state, Vector3 move) {
+    private Dictionary<string, float> GetFeatures(GameState state, Vector3 move) {
         // look in featureExtractors.py (PSet 3)
         Dictionary<string, float> features = new Dictionary<string, float>();
 
@@ -99,7 +99,7 @@ public class RLAgent : Agent
 
     private void UpdateWeights(GameState state, Vector3 move, GameState nextState, float reward) {
         // Lecture 11 Slide 16
-        difference = (reward + gamma * GetValueFromQValues(nextState)) - EvaluateQValue(state, move);
+        float difference = (reward + gamma * GetValueFromQValues(nextState)) - EvaluateQValue(state, move);
 
         Dictionary<string, float> features = GetFeatures(state, move);
         foreach (KeyValuePair<string, float> kvp in features) {
