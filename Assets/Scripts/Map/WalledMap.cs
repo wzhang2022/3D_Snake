@@ -58,7 +58,7 @@ public class WalledMap : Map {
             wallPositions.Add(new Vector3(maxX, 0, z));
             wallPositions.Add(new Vector3(maxX, 1, z));
         }
-        for (int z = minZ / 2; z <= maxZ / 2; z++) {
+        for (int z = minZ /2; z <= maxZ /2; z++) {
             Transform MiddleWall = Instantiate(wallPrefab, this.gameObject.transform, true).transform;
             wallPositions.Add(new Vector3(0, 1, z));
             wallPositions.Add(new Vector3(0, 0, z));
@@ -76,7 +76,7 @@ public class WalledMap : Map {
             int y = Random.Range(0, 2);
             int z = Random.Range(minZ + 1, maxZ);
             pos = new Vector3(x, y, z);
-        } while (!wallPositions.Contains(pos));
+        } while (wallPositions.Contains(pos));
         return pos;
     }
 }
