@@ -3,6 +3,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using System.IO;
+using System;
+using System.Reflection;
+using Random = UnityEngine.Random;
 // TODO: will add another script "GameManager" for things requiring persisting over scenes, like music, etc.
 public class MatchManager : MonoBehaviour
 {
@@ -19,6 +23,10 @@ public class MatchManager : MonoBehaviour
     public bool territoryOn = false;
     public bool territoryDoubleLayer = false;
     public bool territoryPermanent = false;
+    public bool loopGame = false;
+    public string player1BotType;
+    public string player2BotType;
+    private int trialNumber = 0;
 
     // player controllers - note can generalize into array if we do multiplayer
     public Agent player1;
@@ -232,14 +240,37 @@ public class MatchManager : MonoBehaviour
         {
             Time.timeScale = 0;
             //loop for trials
-            
-            if (tie) Debug.Log("Tie");
-            if (player1Win) Debug.Log("Player1 win");
-            if (player2Win) Debug.Log("Player2 win");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            if (loopGame) {
+                string outcome = "";
+                if (tie) {
+                    Debug.Log("Tie");
+                    outcome = "Tie";
+                }
+                if (player1Win) {
+                    outcome = "player1 win";
+                    Debug.Log("Player1 win");
+                }
+                if (player2Win) {
+                    outcome = "player2 win";
+                    Debug.Log("Player2 win");
+                }
+                trialNumber++;
+                string outMessage = "Result is " + outcome + " and player1 is " + player1BotType + " and player2 is " + player2BotType + Environment.NewLine;
+                string fileName = player1BotType + "_vs_" + player2BotType + ".txt";
+                Debug.Log(fileName);
+                string destPath = Path.Combine("", fileName);
+                Debug.Log(outMessage);
+                Debug.Log(destPath);
+                if (!File.Exists(destPath)) {
+                    var myFile = File.Create(destPath);
+                    myFile.Close();
+                }
+                File.AppendAllText(destPath, outMessage);
+                Debug.Log(SceneManager.GetActiveScene().buildIndex);
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
             Time.timeScale = 1;
-            return;
-
+            Debug.Log("Gameover");
             gameOverMenu.SetActive(true);
             if (tie)
             {
@@ -296,5 +327,9 @@ public class MatchManager : MonoBehaviour
             player2.Move();
         }
 
+    }
+    private static string GetExecutingDirectoryName() {
+        var location = new Uri(Assembly.GetEntryAssembly().GetName().CodeBase);
+        return new FileInfo(location.AbsolutePath).Directory.FullName;
     }
 }
