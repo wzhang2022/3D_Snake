@@ -17,7 +17,7 @@ public class RLAgent : Agent
     Dictionary<string, float> weights = new Dictionary<string, float>();
 
     // learning rate, exploration rate, and discount factor
-    float alpha = 0.2f;
+    float alpha = 0.01f;
     float epsilon = 0.05f;
     float gamma = 0.8f;
 
@@ -40,7 +40,7 @@ public class RLAgent : Agent
 
         // Update weights here
         if (prevState != null) {
-            float reward = state.player1.length - prevState.player1.length;
+            float reward = state.player1.length - state.player2.length;
             UpdateWeights(prevState, prevMove, state, reward);
         }
 
@@ -100,15 +100,29 @@ public class RLAgent : Agent
         return q_value;
     }
 
+    // straight from Greedy Agent
+    private Vector3 FindTarget(HashSet<Vector3> goals)
+    {
+        Vector3 target = new Vector3(0, 0, 0);
+        Vector3 head = this.head.transform.position;
+
+        foreach (Vector3 goal in goals)
+        {
+            if (target == Vector3.zero || MDist(target, head) > MDist(goal, head))
+            {
+                target = goal;
+            }
+        }
+        return target;
+    }
+
     private Dictionary<string, float> GetFeatures(GameState state, Vector3 move) {
         /*
             Features of a state after a move:
-            - length of snake
             - how far away the closest food is
                 - given you have power up
                 - give you don't
             - distance to nearest body by the time you reach it
-            - whether move made you eat food (1.0)
         */
 
         Dictionary<string, float> features = new Dictionary<string, float>();
@@ -117,12 +131,52 @@ public class RLAgent : Agent
         // features.Add("closest_food", 1.0);
         // weights.Add("closest_food", 0.0);
 
-        // Length of snake
-        features.Add("length", ((float)state.player1.length / 40f));
-        if (!weights.ContainsKey("length")) {
-            weights.Add("length", 0.9f);
+        // Closest food
+        Vector3 head = state.player1.headPosition;
+        Vector3 target = FindTarget(m.foodPositions);
+        float dist = MDist(head + move, target);
+
+        features.Add("closest_food", (dist / 30f));
+        if (!weights.ContainsKey("closest_food")) {
+            weights.Add("closest_food", -6.186516f);
         }
-    
+        
+        // Closest power-up
+        target = FindTarget(m.powerUpPositions);
+        dist = MDist(head + move, target);
+
+        features.Add("closest_pup", (dist / 30f) /* * ((float)state.player2.length / 10f) */);
+        if (!weights.ContainsKey("closest_pup")) {
+            weights.Add("closest_pup", -5.91248f);
+        }
+
+        // avoid enemy if enemy has power up
+        target = state.player2.headPosition;
+        dist = MDist(head + move, target);
+
+        if (state.player2.powerTurns > 0) {
+            features.Add("avoid_enemy", (1f / dist));
+        } else {
+            features.Add("avoid_enemy", -2.049626f);
+        }
+        
+        if (!weights.ContainsKey("avoid_enemy")) {
+            weights.Add("avoid_enemy", -1.349819f);
+        }
+
+        // go towards enemy if you have power up
+        HashSet<Vector3> enemy_body = new HashSet<Vector3>(state.player2.bodyPositions);
+        target = FindTarget(enemy_body);
+        if (state.player1.powerTurns > MDist(head, target)) {
+            features.Add("go_to_enemy", (dist / 30f));
+        } else {
+            features.Add("go_to_enemy", 0f);
+        }
+
+        if (!weights.ContainsKey("go_to_enemy")) {
+            weights.Add("go_to_enemy", 0f);
+        }
+
         return features;
     }
 
@@ -134,8 +188,8 @@ public class RLAgent : Agent
         foreach (KeyValuePair<string, float> kvp in features) {
             weights[kvp.Key] += alpha * difference * kvp.Value;
         }
-
-        foreach (KeyValuePair<string, float> kvp in features) {
+        
+        foreach (KeyValuePair<string, float> kvp in weights) {
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
     }
