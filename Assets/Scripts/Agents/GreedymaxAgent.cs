@@ -27,18 +27,20 @@ public class GreedymaxAgent : Agent {
             //Debug.Log(move);
             GameState nextState = currState.NextState(move, Vector3.zero);
             float newVal = OpponentMoveValue(nextState, greedymaxDepth - 1);
+            // tiebreak greedily - based on one move lookahead
+            newVal += .01f * Utility(currState.NextState(move, Vector3.zero));
             if (newVal > val) {
 
                 bestMove = move;
                 val = newVal;
             }
         }
+
         //Debug.Log(bestMove);
-        Debug.Log(val);
+        //Debug.Log(val);
         return bestMove;
     }
-
-    // TODO: use greedy heuristic if there is no best move
+    
     private float OurMoveValue(GameState state, int depth) {
         if (depth == 0) {
             return Utility(state);
@@ -52,67 +54,80 @@ public class GreedymaxAgent : Agent {
         return val;
     }
 
-    // TODO: Assume that opponent picks a move greedily, opponent is player 2
-    private float OpponentMoveValue(GameState state, int depth) {
+    // Assume that opponent picks a move greedily, opponent is player 2
+    private float OpponentMoveValue(GameState state, int depth)
+    {
         // return OurMoveValue(state, depth - 1); // testing: pretend opponent never moves
-        if (depth == 0) {
+        if (depth == 0)
+        {
             return Utility(state);
         }
         HashSet<Vector3> targets = new HashSet<Vector3>(state.foods);
         targets.UnionWith(state.powerups);
-        if (state.player2.powerTurns > 1) {
+        if (state.player2.powerTurns > 1)
+        {
             targets.UnionWith(state.player1.bodyPositions);
+            targets.Add(state.player1.headPosition);
         }
-        Vector3 bestTarget = Vector3.zero;
+        Vector3 bestTarget = new Vector3(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity);
         Vector3 head = state.player2.headPosition;
-        foreach (Vector3 target in targets) {
-            if (MDist(target, head) < MDist(bestTarget, head)) {
+        foreach (Vector3 target in targets)
+        {
+            if (MDist(target, head) < MDist(bestTarget, head))
+            {
                 bestTarget = target;
             }
         }
         Vector3[] moves = state.player2.ValidMoves(state);
         Vector3 bestMove = Vector3.left;
-        if (moves.Length > 0) {
+        if (moves.Length > 0)
+        {
             bestMove = moves[0];
         }
-        foreach (Vector3 move in moves) {
-            if (MDist(move + head, bestTarget) < MDist(bestMove + head, bestTarget)) {
+        foreach (Vector3 move in moves)
+        {
+            if (MDist(move + head, bestTarget) < MDist(bestMove + head, bestTarget))
+            {
                 bestMove = move;
             }
         }
         GameState nextState = state.NextState(Vector3.zero, bestMove);
         return OurMoveValue(nextState, depth); ;
     }
-    // assume that player2 is the expectimax agent
+    // player1 is always the expectimax agent in the gamestate
     private float Utility(GameState state) {
         // certain loss condition
-        if (state.player1.length <= 1)
+        //Debug.Log(state.player2.length);
+        if (state.player1.length < 1)
         {
             return -Mathf.Infinity;
         }
+        // certain win condition
+        if (state.player2.length < 1)
+        {
+            return Mathf.Infinity;
+        }
         float lengthDifference = state.player1.length - state.player2.length;
-        float distToTarget = DistToTarget(state, state.player2.headPosition);
-        float powerTurns = state.player2.powerTurns;
+        float distToTarget = DistToTarget(state, state.player1);
+        float powerTurnsDiff = state.player1.powerTurns - state.player2.powerTurns;
         float distBetweenPlayers = MDist(state.player1.headPosition, state.player2.headPosition);
-        // return lengthDifference; //
-        return lengthDifference - 0.01f * DistToTarget(state, state.player1.headPosition) - .0001f * state.foods.Count; // tiebreak greedily
-        //return 100 * lengthDifference - distToTarget * 0.3f + powerTurns * 0.2f - distBetweenPlayers*0.1f;
+        return lengthDifference - distToTarget * 0.01f + powerTurnsDiff * 0.1f;// - distBetweenPlayers*0.01f;
     }
 
-    private float DistToTarget(GameState state, Vector3 headPosition) {
-        Vector3 target = FindTarget(state, headPosition);
-        return MDist(target, headPosition);
+    private float DistToTarget(GameState state, SimplifiedAgent player) {
+        Vector3 target = FindTarget(state, player);
+        return MDist(target, player.headPosition);
     }
 
-    private Vector3 FindTarget(GameState state, Vector3 headPosition) {
+    private Vector3 FindTarget(GameState state, SimplifiedAgent player) {
         Vector3 target = new Vector3(0, 0, 0);
-        Vector3 head = headPosition;
+        Vector3 head = player.headPosition;
         // food and powerups are goals
         HashSet<Vector3> goals = new HashSet<Vector3>(state.foods);
         goals.UnionWith(state.powerups);
         // if currently powered up, so is the other player's body
-        if (state.player2.powerTurns> 1) {
-            goals.UnionWith(state.player1.bodyPositions);
+        if (player.powerTurns> 1) {
+            goals.UnionWith(state.GetOpponent(player).bodyPositions);
         }
         foreach (Vector3 goal in goals) {
             if (target == Vector3.zero || MDist(target, head) > MDist(goal, head)) {

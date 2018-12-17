@@ -232,12 +232,13 @@ public class MatchManager : MonoBehaviour
         {
             Time.timeScale = 0;
             //loop for trials
-            /*
+            
             if (tie) Debug.Log("Tie");
             if (player1Win) Debug.Log("Player1 win");
             if (player2Win) Debug.Log("Player2 win");
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            */
+            Time.timeScale = 1;
+            return;
 
             gameOverMenu.SetActive(true);
             if (tie)
@@ -256,7 +257,7 @@ public class MatchManager : MonoBehaviour
     }
 
     private void ProcessMoves() {
-        // player2.powerTurns = 1000;
+        //player1.powerTurns = 10;
         player1.MoveCommand(player1.DecideMove(player2));
         player2.MoveCommand(player2.DecideMove(player1));
         player1.PrepareNextMove();

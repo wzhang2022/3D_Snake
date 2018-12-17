@@ -12,6 +12,7 @@ public class GameState {
     public HashSet<Vector3> foods;
     public SimplifiedAgent player1;
     public SimplifiedAgent player2;
+    public int timeStepsLeft;
 
     public GameState(HashSet<Vector3> walls,
                      HashSet<Vector3> powerups,
@@ -46,6 +47,11 @@ public class GameState {
     private void Hurt(SimplifiedAgent agent) {
         if (agent.powerTurns < 1)
         {
+            if (agent.length <= 1)
+            {
+                // simulated death
+                agent.length = 0;
+            }
             if (agent.length <= 3)
             {
                 agent.length = 1;
@@ -89,7 +95,7 @@ public class GameState {
         if (IsCrash(nextPos) || headCollision) {
             if (agent.powerTurns < 1) {
                 Hurt(agent);
-            } else if (opponent.bodyPositions.Contains(nextPos) && agent.powerTurns > 0) { //checks if attacking player2
+            } else if (opponent.bodyPositions.Contains(nextPos) && agent.powerTurns > 0) { //checks if attacking opponent
                 Hurt(opponent);
             }
         } else {
@@ -121,7 +127,7 @@ public class GameState {
     }
 
     //should only take in the SimplifiedAgents that are fields of this GameState
-    private SimplifiedAgent GetOpponent(SimplifiedAgent agent) { 
+    public SimplifiedAgent GetOpponent(SimplifiedAgent agent) { 
         if (agent == this.player1) {
             return player2;
         } else if (agent == this.player2) {
@@ -164,7 +170,7 @@ public class SimplifiedAgent {
                 !state.IsCrash(headPosition + move)).ToArray<Vector3>();
         if (moves.Count() == 0)
         {
-            Debug.Log("No valid moves");
+            //Debug.Log("No valid moves");
             return new[] { Vector3.left };
         }
         return moves;

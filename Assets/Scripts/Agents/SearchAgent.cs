@@ -88,7 +88,7 @@ public class SearchAgent : Agent
                 }
             }
         }
-        Debug.Log("no goals reachable");
+        //Debug.Log("no goals reachable");
         return 99999; // no goals reachable
     }
     private float Heuristic(Vector3 currLocation, Vector3 target) {
