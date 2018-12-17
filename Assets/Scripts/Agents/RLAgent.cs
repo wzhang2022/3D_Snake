@@ -23,6 +23,8 @@ public class RLAgent : Agent
 
     public MatchManager m;
 
+    GameState prevState = null;
+
     // Look into this later
     public void Start() {
         // obtain reference to match manager script to access game state
@@ -32,10 +34,12 @@ public class RLAgent : Agent
     }
 
     public override Vector3 DecideMove(Agent otherplayer) {
-        Vector3[] validMoves = FindSafeMoves();
-
         // this agent will visualize itself as player 1 always
         GameState state = new GameState(m.wallPositions, m.powerUpPositions, m.foodPositions, this, otherplayer);
+
+        // Update weights here
+
+        Vector3[] validMoves = state.player1.ValidMoves(state);
 
         // with prob epsilon, pick a random valid move
         if ((float)rnd.NextDouble() < epsilon) {
@@ -47,7 +51,7 @@ public class RLAgent : Agent
     }
 
     private float GetValueFromQValues(GameState state) {
-        Vector3[] validMoves = FindSafeMoves();
+        Vector3[] validMoves = state.player1.ValidMoves(state);
         float best_value = -Mathf.Infinity;
 
         // Calculate best value from QValues
@@ -59,7 +63,7 @@ public class RLAgent : Agent
         return best_value;
     }
     private Vector3 GetActionFromQValues(GameState state) {
-        Vector3[] validMoves = FindSafeMoves();
+        Vector3[] validMoves = state.player1.ValidMoves(state);
         List<Vector3> bestMoves = new List<Vector3>();
         float best_value = GetValueFromQValues(state);
 
