@@ -44,10 +44,14 @@ public class GameState {
     }
 
     private void Hurt(SimplifiedAgent agent) {
-        if (agent.length <= 3) {
-            agent.length = 1;
+        if (agent.powerTurns < 1)
+        {
+            if (agent.length <= 3)
+            {
+                agent.length = 1;
+            }
+            agent.length = agent.length - agent.length / 3;
         }
-        agent.length = agent.length - agent.length / 3;
     }
 
     //modifies agent1 and agent2
@@ -55,7 +59,7 @@ public class GameState {
         Vector3[] moves = new[] { Vector3.left, Vector3.right, Vector3.up, Vector3.down, Vector3.forward, Vector3.back, Vector3.zero };
         Debug.Assert(moves.Contains(move1), "move1 not valid input Vector3 move");
         Debug.Assert(moves.Contains(move2), "move2 not valid input Vector3 move");
-        
+
         player1.powerTurns = Mathf.Max(player1.powerTurns - 1, 0);
         player2.powerTurns = Mathf.Max(player2.powerTurns - 1, 0);
 
@@ -156,6 +160,7 @@ public class SimplifiedAgent {
     {
         Vector3[] moves = new[] { Vector3.left, Vector3.right, Vector3.up, Vector3.down, Vector3.forward, Vector3.back };
         moves = moves.Where(move =>
+                (powerTurns > 0 && !state.walls.Contains(move + headPosition)) ||
                 !state.IsCrash(headPosition + move)).ToArray<Vector3>();
         if (moves.Count() == 0)
         {
