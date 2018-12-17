@@ -256,6 +256,7 @@ public class MatchManager : MonoBehaviour
     }
 
     private void ProcessMoves() {
+        // player2.powerTurns = 1000;
         player1.MoveCommand(player1.DecideMove(player2));
         player2.MoveCommand(player2.DecideMove(player1));
         player1.PrepareNextMove();

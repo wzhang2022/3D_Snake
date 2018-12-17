@@ -23,8 +23,8 @@ public class GreedymaxAgent : Agent {
         float val = -Mathf.Infinity;
         Vector3 bestMove = Vector3.left;
         Vector3[] validMoves = currState.player1.ValidMoves(currState);
-        // Debug.Log(currState.NextState(validMoves[0], Vector3.zero));
         foreach (Vector3 move in validMoves) {
+            //Debug.Log(move);
             GameState nextState = currState.NextState(move, Vector3.zero);
             float newVal = OpponentMoveValue(nextState, greedymaxDepth - 1);
             if (newVal > val) {
@@ -33,10 +33,11 @@ public class GreedymaxAgent : Agent {
                 val = newVal;
             }
         }
-        // Debug.Log(val);
+        //Debug.Log(bestMove);
+        Debug.Log(val);
         return bestMove;
     }
-    //returns the best move, calculated by expectimax, of the agent given the game state
+
     // TODO: use greedy heuristic if there is no best move
     private float OurMoveValue(GameState state, int depth) {
         if (depth == 0) {
@@ -51,7 +52,7 @@ public class GreedymaxAgent : Agent {
         return val;
     }
 
-    // TODO: Assume that opponent picks a move greedily, opponent is player 1
+    // TODO: Assume that opponent picks a move greedily, opponent is player 2
     private float OpponentMoveValue(GameState state, int depth) {
         // return OurMoveValue(state, depth - 1); // testing: pretend opponent never moves
         if (depth == 0) {
@@ -59,11 +60,11 @@ public class GreedymaxAgent : Agent {
         }
         HashSet<Vector3> targets = new HashSet<Vector3>(state.foods);
         targets.UnionWith(state.powerups);
-        if (state.player1.powerTurns > 1) {
-            targets.UnionWith(state.player2.bodyPositions);
+        if (state.player2.powerTurns > 1) {
+            targets.UnionWith(state.player1.bodyPositions);
         }
         Vector3 bestTarget = Vector3.zero;
-        Vector3 head = state.player1.headPosition;
+        Vector3 head = state.player2.headPosition;
         foreach (Vector3 target in targets) {
             if (MDist(target, head) < MDist(bestTarget, head)) {
                 bestTarget = target;
@@ -84,21 +85,28 @@ public class GreedymaxAgent : Agent {
     }
     // assume that player2 is the expectimax agent
     private float Utility(GameState state) {
-        float lengthDifference = -state.player1.length + state.player2.length;
-        float distToTarget = DistToTarget(state);
+        // certain loss condition
+        if (state.player1.length <= 1)
+        {
+            return -Mathf.Infinity;
+        }
+        float lengthDifference = state.player1.length - state.player2.length;
+        float distToTarget = DistToTarget(state, state.player2.headPosition);
         float powerTurns = state.player2.powerTurns;
         float distBetweenPlayers = MDist(state.player1.headPosition, state.player2.headPosition);
-        return -100*lengthDifference - distToTarget * 0.3f + powerTurns * 0.2f - distBetweenPlayers*0.1f;
+        // return lengthDifference; //
+        return lengthDifference - 0.01f * DistToTarget(state, state.player1.headPosition) - .0001f * state.foods.Count; // tiebreak greedily
+        //return 100 * lengthDifference - distToTarget * 0.3f + powerTurns * 0.2f - distBetweenPlayers*0.1f;
     }
 
-    private float DistToTarget(GameState state) {
-        Vector3 target = FindTarget(state);
-        return MDist(target, state.player2.headPosition);
+    private float DistToTarget(GameState state, Vector3 headPosition) {
+        Vector3 target = FindTarget(state, headPosition);
+        return MDist(target, headPosition);
     }
 
-    private Vector3 FindTarget(GameState state) {
+    private Vector3 FindTarget(GameState state, Vector3 headPosition) {
         Vector3 target = new Vector3(0, 0, 0);
-        Vector3 head = state.player2.headPosition;
+        Vector3 head = headPosition;
         // food and powerups are goals
         HashSet<Vector3> goals = new HashSet<Vector3>(state.foods);
         goals.UnionWith(state.powerups);
