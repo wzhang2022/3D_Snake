@@ -138,7 +138,7 @@ public class RLAgent : Agent
 
         features.Add("closest_food", (dist / 30f));
         if (!weights.ContainsKey("closest_food")) {
-            weights.Add("closest_food", -6.186516f);
+            weights.Add("closest_food", 0f);
         }
         
         // Closest power-up
@@ -147,7 +147,7 @@ public class RLAgent : Agent
 
         features.Add("closest_pup", (dist / 30f) /* * ((float)state.player2.length / 10f) */);
         if (!weights.ContainsKey("closest_pup")) {
-            weights.Add("closest_pup", -5.91248f);
+            weights.Add("closest_pup", 0f);
         }
 
         // avoid enemy if enemy has power up
@@ -157,11 +157,11 @@ public class RLAgent : Agent
         if (state.player2.powerTurns > 0) {
             features.Add("avoid_enemy", (1f / dist));
         } else {
-            features.Add("avoid_enemy", -2.049626f);
+            features.Add("avoid_enemy", 0f);
         }
         
         if (!weights.ContainsKey("avoid_enemy")) {
-            weights.Add("avoid_enemy", -1.349819f);
+            weights.Add("avoid_enemy", 0f);
         }
 
         // go towards enemy if you have power up
