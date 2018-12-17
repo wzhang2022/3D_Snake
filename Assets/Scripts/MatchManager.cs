@@ -232,13 +232,13 @@ public class MatchManager : MonoBehaviour
         {
             Time.timeScale = 0;
             //loop for trials
-            
+            /*
             if (tie) Debug.Log("Tie");
             if (player1Win) Debug.Log("Player1 win");
             if (player2Win) Debug.Log("Player2 win");
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             Time.timeScale = 1;
-            return;
+            return;*/
 
             gameOverMenu.SetActive(true);
             if (tie)

@@ -17,7 +17,7 @@ public class RLAgent : Agent
     Dictionary<string, float> weights = new Dictionary<string, float>();
 
     // learning rate, exploration rate, and discount factor
-    float alpha = 0.02f;
+    float alpha = 0.2f;
     float epsilon = 0.05f;
     float gamma = 0.8f;
 
@@ -40,7 +40,7 @@ public class RLAgent : Agent
 
         // Update weights here
         if (prevState != null) {
-            float reward = (state.player1.length - state.player2.length) + (state.player1.powerTurns - prevState.player1.powerTurns);
+            float reward = (state.player1.length - state.player2.length) - (prevState.player1.length - prevState.player2.length);
             UpdateWeights(prevState, prevMove, state, reward);
         }
 
@@ -134,7 +134,7 @@ public class RLAgent : Agent
         // Bias
         features.Add("bias", (1.0f));
         if (!weights.ContainsKey("bias")) {
-            weights.Add("bias", -21.7f);
+            weights.Add("bias", 0f);
         }
 
         // Closest food
@@ -144,7 +144,7 @@ public class RLAgent : Agent
 
         features.Add("closest_food", (dist / 100f));
         if (!weights.ContainsKey("closest_food")) {
-            weights.Add("closest_food", -1.199f);
+            weights.Add("closest_food", 0f);
         }
         
         // Closest power-up
@@ -153,7 +153,7 @@ public class RLAgent : Agent
 
         features.Add("closest_pup", (dist / 100f) /* * ((float)state.player2.length / 10f) */);
         if (!weights.ContainsKey("closest_pup")) {
-            weights.Add("closest_pup", -1.2979f);
+            weights.Add("closest_pup", 0f);
         }
 
         // avoid enemy if enemy has power up
@@ -164,29 +164,29 @@ public class RLAgent : Agent
             if (dist == 0f) {
                 features.Add("avoid_enemy", 1f);
             } else {
-                features.Add("avoid_enemy", (1f / dist));
+                features.Add("avoid_enemy", (dist / 100f));
             }  
         } else {
             features.Add("avoid_enemy", 0f);
         }
         
         if (!weights.ContainsKey("avoid_enemy")) {
-            weights.Add("avoid_enemy", -1.33f);
+            weights.Add("avoid_enemy", 0f);
         }
 
         // go towards enemy if you have power up
-        /*
+        
         HashSet<Vector3> enemy_body = new HashSet<Vector3>(state.player2.bodyPositions);
         target = FindTarget(enemy_body);
         if (state.player1.powerTurns > MDist(head, target)) {
-            features.Add("go_to_enemy", (dist / 100f));
+            features.Add("go_to_enemy", (1f / (dist + 1)));
         } else {
             features.Add("go_to_enemy", 0f);
         }
 
         if (!weights.ContainsKey("go_to_enemy")) {
             weights.Add("go_to_enemy", 0f);
-        }*/
+        }
 
         // normalize
         foreach (var entry in features.ToList())
@@ -212,8 +212,8 @@ public class RLAgent : Agent
         foreach (KeyValuePair<string, float> kvp in weights) {
             Debug.Log(string.Format("WEIGHTS: Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
-        foreach (KeyValuePair<string, float> kvp in features) {
+        /*foreach (KeyValuePair<string, float> kvp in features) {
             Debug.Log(string.Format("FEATURES: Key = {0}, Value = {1}", kvp.Key, kvp.Value));
-        }
+        }*/
     }
 }
