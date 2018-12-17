@@ -17,7 +17,7 @@ public class RLAgent : Agent
     Dictionary<string, float> weights = new Dictionary<string, float>();
 
     // learning rate, exploration rate, and discount factor
-    float alpha = 0.01f;
+    float alpha = 0.02f;
     float epsilon = 0.05f;
     float gamma = 0.8f;
 
@@ -40,7 +40,7 @@ public class RLAgent : Agent
 
         // Update weights here
         if (prevState != null) {
-            float reward = state.player1.length - state.player2.length;
+            float reward = (state.player1.length - state.player2.length) + (state.player1.powerTurns - prevState.player1.powerTurns);
             UpdateWeights(prevState, prevMove, state, reward);
         }
 
@@ -131,23 +131,29 @@ public class RLAgent : Agent
         // features.Add("closest_food", 1.0);
         // weights.Add("closest_food", 0.0);
 
+        // Bias
+        features.Add("bias", (1.0f));
+        if (!weights.ContainsKey("bias")) {
+            weights.Add("bias", -21.7f);
+        }
+
         // Closest food
         Vector3 head = state.player1.headPosition;
         Vector3 target = FindTarget(m.foodPositions);
         float dist = MDist(head + move, target);
 
-        features.Add("closest_food", (dist / 30f));
+        features.Add("closest_food", (dist / 100f));
         if (!weights.ContainsKey("closest_food")) {
-            weights.Add("closest_food", 0f);
+            weights.Add("closest_food", -1.199f);
         }
         
         // Closest power-up
         target = FindTarget(m.powerUpPositions);
         dist = MDist(head + move, target);
 
-        features.Add("closest_pup", (dist / 30f) /* * ((float)state.player2.length / 10f) */);
+        features.Add("closest_pup", (dist / 100f) /* * ((float)state.player2.length / 10f) */);
         if (!weights.ContainsKey("closest_pup")) {
-            weights.Add("closest_pup", 0f);
+            weights.Add("closest_pup", -1.2979f);
         }
 
         // avoid enemy if enemy has power up
@@ -155,26 +161,37 @@ public class RLAgent : Agent
         dist = MDist(head + move, target);
 
         if (state.player2.powerTurns > 0) {
-            features.Add("avoid_enemy", (1f / dist));
+            if (dist == 0f) {
+                features.Add("avoid_enemy", 1f);
+            } else {
+                features.Add("avoid_enemy", (1f / dist));
+            }  
         } else {
             features.Add("avoid_enemy", 0f);
         }
         
         if (!weights.ContainsKey("avoid_enemy")) {
-            weights.Add("avoid_enemy", 0f);
+            weights.Add("avoid_enemy", -1.33f);
         }
 
         // go towards enemy if you have power up
+        /*
         HashSet<Vector3> enemy_body = new HashSet<Vector3>(state.player2.bodyPositions);
         target = FindTarget(enemy_body);
         if (state.player1.powerTurns > MDist(head, target)) {
-            features.Add("go_to_enemy", (dist / 30f));
+            features.Add("go_to_enemy", (dist / 100f));
         } else {
             features.Add("go_to_enemy", 0f);
         }
 
         if (!weights.ContainsKey("go_to_enemy")) {
             weights.Add("go_to_enemy", 0f);
+        }*/
+
+        // normalize
+        foreach (var entry in features.ToList())
+        {
+            features[entry.Key] = entry.Value / 10f;
         }
 
         return features;
@@ -182,6 +199,9 @@ public class RLAgent : Agent
 
     private void UpdateWeights(GameState state, Vector3 move, GameState nextState, float reward) {
         // Lecture 11 Slide 16
+        Debug.Log("====================");
+        Debug.Log(string.Format("Best Q-Value of Next state: {0}", GetValueFromQValues(nextState)));
+        Debug.Log(string.Format("QValue of this action: {0}", EvaluateQValue(state, move)));
         float difference = (reward + gamma * GetValueFromQValues(nextState)) - EvaluateQValue(state, move);
 
         Dictionary<string, float> features = GetFeatures(state, move);
@@ -190,7 +210,10 @@ public class RLAgent : Agent
         }
         
         foreach (KeyValuePair<string, float> kvp in weights) {
-            Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
+            Debug.Log(string.Format("WEIGHTS: Key = {0}, Value = {1}", kvp.Key, kvp.Value));
+        }
+        foreach (KeyValuePair<string, float> kvp in features) {
+            Debug.Log(string.Format("FEATURES: Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
     }
 }
