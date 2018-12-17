@@ -137,7 +137,7 @@ public abstract class Agent : MonoBehaviour {
                 IsSafe(head + move) &&
                 this.direction_prev != -move).ToArray<Vector3>();
         if (moves.Count() == 0) {
-            Debug.Log("No valid moves");
+            // Debug.Log("No valid moves");
             return new[] { Vector3.left };
         }
         return moves;

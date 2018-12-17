@@ -57,7 +57,7 @@ public class CrossMap : Map {
             wallPositions.Add(new Vector3(maxX, 0, z));
             wallPositions.Add(new Vector3(maxX, 1, z));
         }
-        for (int z = minZ / 2; z <= maxZ / 2; z++) {
+        for (int z = minZ / 2 - 1; z <= maxZ / 2 + 2; z++) {
             Transform MiddleWall = Instantiate(wallPrefab, this.gameObject.transform, true).transform;
             wallPositions.Add(new Vector3(0, 1, z));
             wallPositions.Add(new Vector3(0, 0, z));
@@ -66,7 +66,7 @@ public class CrossMap : Map {
             MiddleWall.localScale = new Vector3(1, 3, 1);
         }
 
-        for (int x = minX / 2; x <= maxX / 2; x++) {
+        for (int x = minX / 2 - 1; x <= maxX / 2 + 1; x++) {
             Transform MiddleWall = Instantiate(wallPrefab, this.gameObject.transform, true).transform;
             wallPositions.Add(new Vector3(x, 1, 0));
             wallPositions.Add(new Vector3(x, 0, 0));

@@ -1072,9 +1072,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1120708751}
+  - component: {fileID: 1120708754}
   - component: {fileID: 1120708752}
   - component: {fileID: 1120708753}
-  - component: {fileID: 1120708754}
   m_Layer: 0
   m_Name: BasicMap
   m_TagString: Untagged
@@ -1105,7 +1105,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1120708750}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c2788a4f120444f45a91561753686eb0, type: 3}
   m_Name: 
@@ -1137,7 +1137,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1120708750}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: faa74fa5050b35b49852598a30e65b4e, type: 3}
   m_Name: 
@@ -2306,7 +2306,7 @@ MonoBehaviour:
   powerUpSpawnRate: 0.1
   maxPowerUp: 1
   powerUpDuration: 15
-  roundSteps: 80
+  roundSteps: 120
   territoryOn: 0
   territoryDoubleLayer: 0
   territoryPermanent: 0
@@ -2320,7 +2320,7 @@ MonoBehaviour:
   player1WinsText: {fileID: 1521604295}
   player2WinsText: {fileID: 760211610}
   tieText: {fileID: 364699315}
-  map: {fileID: 1120708752}
+  map: {fileID: 1120708754}
 --- !u!4 &1891107136
 Transform:
   m_ObjectHideFlags: 0
