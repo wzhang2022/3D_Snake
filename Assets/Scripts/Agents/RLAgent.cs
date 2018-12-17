@@ -24,6 +24,7 @@ public class RLAgent : Agent
     public MatchManager m;
 
     GameState prevState = null;
+    Vector3 prevMove = new Vector3(0, 0, 0);
 
     // Look into this later
     public void Start() {
@@ -38,16 +39,25 @@ public class RLAgent : Agent
         GameState state = new GameState(m.wallPositions, m.powerUpPositions, m.foodPositions, this, otherplayer);
 
         // Update weights here
+        if (prevState != null) {
+            float reward = state.player1.length - prevState.player1.length;
+            UpdateWeights(prevState, prevMove, state, reward);
+        }
 
         Vector3[] validMoves = state.player1.ValidMoves(state);
 
         // with prob epsilon, pick a random valid move
+        Vector3 move = new Vector3(0, 0, 0);
         if ((float)rnd.NextDouble() < epsilon) {
             int r = rnd.Next(validMoves.Length);
-            return validMoves[r];
+            move = validMoves[r];
         } else {
-            return GetActionFromQValues(state);
+            move = GetActionFromQValues(state);
         }
+
+        prevMove = move;
+        prevState = state;
+        return move;
     }
 
     private float GetValueFromQValues(GameState state) {
@@ -91,13 +101,28 @@ public class RLAgent : Agent
     }
 
     private Dictionary<string, float> GetFeatures(GameState state, Vector3 move) {
-        // look in featureExtractors.py (PSet 3)
+        /*
+            Features of a state after a move:
+            - length of snake
+            - how far away the closest food is
+                - given you have power up
+                - give you don't
+            - distance to nearest body by the time you reach it
+            - whether move made you eat food (1.0)
+        */
+
         Dictionary<string, float> features = new Dictionary<string, float>();
 
         // syntax to add features to dictionary:
         // features.Add("closest_food", 1.0);
-        // weights.Add("closest_food", 1.0);
+        // weights.Add("closest_food", 0.0);
 
+        // Length of snake
+        features.Add("length", ((float)state.player1.length / 40f));
+        if (!weights.ContainsKey("length")) {
+            weights.Add("length", 0.9f);
+        }
+    
         return features;
     }
 
@@ -108,6 +133,10 @@ public class RLAgent : Agent
         Dictionary<string, float> features = GetFeatures(state, move);
         foreach (KeyValuePair<string, float> kvp in features) {
             weights[kvp.Key] += alpha * difference * kvp.Value;
+        }
+
+        foreach (KeyValuePair<string, float> kvp in features) {
+            Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
     }
 }
