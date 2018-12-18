@@ -40,10 +40,16 @@ public class RLAgent : Agent
         string lastLine = File.ReadAllLines(destPath).Last();
         string[] savedWeights = lastLine.Split(' ');
         weights.Add("bias", float.Parse(savedWeights[0]));
+        /*
         weights.Add("closest_food", float.Parse(savedWeights[1]));
         weights.Add("closest_pup", float.Parse(savedWeights[2]));
         weights.Add("avoid_enemy", float.Parse(savedWeights[3]));
         weights.Add("go_to_enemy", float.Parse(savedWeights[4]));
+        */
+        weights.Add("closest_food", -1);
+        weights.Add("closest_pup", -2);
+        weights.Add("avoid_enemy", 3);
+        weights.Add("go_to_enemy", 3);
     }
 
     public override Vector3 DecideMove(Agent otherplayer) {
@@ -63,7 +69,7 @@ public class RLAgent : Agent
             {
                 reward = 100f;
             }
-            UpdateWeights(prevState, prevMove, state, reward);
+            //UpdateWeights(prevState, prevMove, state, reward);
         }
 
         Vector3[] validMoves = state.player1.ValidMoves(state);
@@ -168,20 +174,26 @@ public class RLAgent : Agent
         if (!weights.ContainsKey("closest_food")) {
             weights.Add("closest_food", 0f);
         }
-        
-        // Closest power-up
+
+        // Closest power-up (in range)
         target = FindTarget(m.powerUpPositions);
         dist = MDist(head + move, target);
-
-        features.Add("closest_pup", (dist / 100f) /* * ((float)state.player2.length / 10f) */);
+        float enemyDist = MDist(state.player2.headPosition, target);
+        if (m.powerUpPositions.Count == 0 || dist > enemyDist)
+        {
+            features.Add("closest_pup", 0);
+        } else
+        {
+            features.Add("closest_pup", (dist / 100f) /* * ((float)state.player2.length / 10f) */);
+        }
         if (!weights.ContainsKey("closest_pup")) {
             weights.Add("closest_pup", 0f);
         }
 
-        // avoid enemy head if enemy has power up (and in range)
+        // avoid enemy head if enemy has more power up (and in range)
         target = state.player2.headPosition;
         dist = MDist(head + move, target);
-        if (state.player2.powerTurns > MDist(head, target)) {
+        if (state.player2.powerTurns > MDist(head, target) && state.player2.powerTurns > state.player1.powerTurns) {
             if (dist == 0f) {
                 features.Add("avoid_enemy", 1f);
             } else {
@@ -195,10 +207,10 @@ public class RLAgent : Agent
             weights.Add("avoid_enemy", 0f);
         }
 
-        // go towards enemy body if you have power up (and in range)
+        // go towards enemy body if you have more power up (and in range)
         HashSet<Vector3> enemy_body = new HashSet<Vector3>(state.player2.bodyPositions);
         target = FindTarget(enemy_body);
-        if (state.player1.powerTurns > MDist(head, target)) {
+        if (state.player1.powerTurns > MDist(head, target) && state.player1.powerTurns > state.player2.powerTurns) {
             features.Add("go_to_enemy", (1f / (dist + 1)));
         } else {
             features.Add("go_to_enemy", 0f);
