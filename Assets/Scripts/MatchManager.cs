@@ -271,8 +271,8 @@ public class MatchManager : MonoBehaviour
                 File.AppendAllText(destPath, outMessage);
                 Debug.Log(SceneManager.GetActiveScene().buildIndex);
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                Time.timeScale = 1;
             }
-            Time.timeScale = 1;
             Debug.Log("Gameover");
             gameOverMenu.SetActive(true);
             if (tie)

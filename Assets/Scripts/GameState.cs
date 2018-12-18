@@ -166,7 +166,7 @@ public class SimplifiedAgent {
     {
         Vector3[] moves = new[] { Vector3.left, Vector3.right, Vector3.up, Vector3.down, Vector3.forward, Vector3.back };
         moves = moves.Where(move =>
-                (powerTurns > 0 && !state.walls.Contains(move + headPosition)) ||
+                (powerTurns > 0 && !state.walls.Contains(move + headPosition) && !bodyPositions.Contains(move + headPosition)) ||
                 !state.IsCrash(headPosition + move)).ToArray<Vector3>();
         if (moves.Count() == 0)
         {

@@ -170,7 +170,7 @@ public class RLAgent : Agent
         Vector3 target = FindTarget(m.foodPositions);
         float dist = MDist(head + move, target);
 
-        features.Add("closest_food", (dist / 100f));
+        features.Add("closest_food", (Mathf.Sqrt(dist) / 10f));
         if (!weights.ContainsKey("closest_food")) {
             weights.Add("closest_food", 0f);
         }
@@ -184,7 +184,7 @@ public class RLAgent : Agent
             features.Add("closest_pup", 0);
         } else
         {
-            features.Add("closest_pup", (dist / 100f) /* * ((float)state.player2.length / 10f) */);
+            features.Add("closest_pup", (Mathf.Sqrt(dist) / 10f) /* * ((float)state.player2.length / 10f) */);
         }
         if (!weights.ContainsKey("closest_pup")) {
             weights.Add("closest_pup", 0f);
