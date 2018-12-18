@@ -5,7 +5,38 @@ using UnityEngine.SceneManagement;
 
 public class StartMenu : MonoBehaviour {
 
-	public void Play2Player()
+    public void WatchGreedy_GreedyMax_Basic() {
+        SceneManager.LoadScene(3);
+    }
+    public void WatchGreedySearch_GreedyMax_Basic() {
+        SceneManager.LoadScene(3);
+    }
+    public void WatchGreedy_Expectimax_Basic() {
+        SceneManager.LoadScene(3);
+    }
+    public void WatchGreedy_GreedySearch_Basic() {
+        SceneManager.LoadScene(3);
+    }
+    public void WatchReflex_Expectimax_Basic() {
+        SceneManager.LoadScene(3);
+    }
+    public void WatchGreedy_GreedySearch_Cross() {
+        SceneManager.LoadScene(3);
+    }
+    public void WatchGreedySearch_GreedyMax_Cross() {
+        SceneManager.LoadScene(3);
+    }
+    public void WatchRL_Greedy_Basic() {
+        SceneManager.LoadScene(3);
+    }
+    public void WatchRL_GreedySearch_Basic() {
+        SceneManager.LoadScene(3);
+    }
+    public void WatchRL_GreedyMax_Basic() {
+        SceneManager.LoadScene(3);
+    }
+
+    public void Play2Player()
     {
         Debug.Log("Play 2-player");
         SceneManager.LoadScene(2);
