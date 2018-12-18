@@ -2089,7 +2089,7 @@ MonoBehaviour:
   length: 5
   powerTurns: 0
   m: {fileID: 0}
-  greedymaxDepth: 0
+  greedymaxDepth: 5
 --- !u!1 &1872821678
 GameObject:
   m_ObjectHideFlags: 0
