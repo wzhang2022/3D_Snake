@@ -2322,7 +2322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c74a3037fe3b2942a67fe1dcea14109, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeStep: 0.25
+  timeStep: 0.02
   foodSpawnRate: 0.2
   maxFood: 30
   powerUpSpawnRate: 0.1
@@ -2332,6 +2332,9 @@ MonoBehaviour:
   territoryOn: 0
   territoryDoubleLayer: 0
   territoryPermanent: 0
+  loopGame: 1
+  player1BotType: greedySearch
+  player2BotType: greedyMax
   player1: {fileID: 1594805643}
   player2: {fileID: 1649160697}
   foodPrefab: {fileID: 1684524527812884, guid: 40d75ded267258348a60299068f95d10, type: 2}
