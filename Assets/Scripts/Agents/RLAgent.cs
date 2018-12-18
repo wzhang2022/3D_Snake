@@ -34,8 +34,9 @@ public class RLAgent : Agent
         // obtain reference to match manager script to access game state
         GameObject managerObject = GameObject.Find("MatchManager");
         m = managerObject.GetComponent<MatchManager>();
-        // Debug.Log(m.ToString());
-        /* load save weights
+        
+        // loading save weights
+        /*
         string fileName = "weights.txt";
         string destPath = Path.Combine("", fileName);
         string lastLine = File.ReadAllLines(destPath).Last();
@@ -44,8 +45,10 @@ public class RLAgent : Agent
         weights.Add("closest_food", float.Parse(savedWeights[1]));
         weights.Add("closest_pup", float.Parse(savedWeights[2]));
         weights.Add("avoid_enemy", float.Parse(savedWeights[3]));
-        weights.Add("go_to_enemy", float.Parse(savedWeights[4]));*/
+        weights.Add("go_to_enemy", float.Parse(savedWeights[4]));
+        */
 
+        // use trained weights
         weights.Add("bias", 0f);
         weights.Add("closest_food", -.762f);
         weights.Add("closest_pup", -.583f);
@@ -166,31 +169,28 @@ public class RLAgent : Agent
             weights.Add("bias", 0f);
         }
 
-        // Closest food (in range)
+        // Closest food
         Vector3 head = state.player1.headPosition;
         Vector3 target = FindTarget(m.foodPositions);
         float dist = MDist(head + move, target);
 
         target = FindTarget(m.foodPositions);
-        dist = MDist(head + move, target);
-        float enemyDist = MDist(state.player2.headPosition, target);
         if (m.foodPositions.Count == 0)
         {
             features.Add("closest_food", 0);
         }
         else
         {
-            // Debug.Log("val: " + (1f / (Mathf.Sqrt(dist + 1))));
             features.Add("closest_food", (Mathf.Sqrt(dist / 100f)));
         }
         if (!weights.ContainsKey("closest_food")) {
             weights.Add("closest_food", -0.1f);
         }
 
-        // Closest power-up (in range)
+        // Closest power-up (only consider if closer to use)
         target = FindTarget(m.powerUpPositions);
         dist = MDist(head + move, target);
-        enemyDist = MDist(state.player2.headPosition, target);
+        float enemyDist = MDist(state.player2.headPosition, target);
         if (m.powerUpPositions.Count == 0 || enemyDist < dist)
         {
             features.Add("closest_pup", 0);
@@ -257,6 +257,7 @@ public class RLAgent : Agent
             }
         }
 
+        // write weights to file
         string weightsString = "";
         foreach (KeyValuePair<string, float> kvp in weights) {
             Debug.Log(string.Format("WEIGHTS: Key = {0}, Value = {1}", kvp.Key, kvp.Value));

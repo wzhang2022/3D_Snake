@@ -1767,6 +1767,8 @@ GameObject:
   - component: {fileID: 1594805645}
   - component: {fileID: 1594805644}
   - component: {fileID: 1594805648}
+  - component: {fileID: 1594805650}
+  - component: {fileID: 1594805651}
   - component: {fileID: 1594805643}
   - component: {fileID: 1594805649}
   m_Layer: 0
@@ -1908,6 +1910,49 @@ MonoBehaviour:
     upY: 109
     downY: 109
   queuedDirection: {x: 0, y: 0, z: 0}
+--- !u!114 &1594805650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1594805642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bb9a33378003d4478fd44ea6e28a647, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  head: {fileID: 1594805642}
+  bodyPrefab: {fileID: 1137459855221860, guid: 3d3eb448d5a80a04e9de33569778940d, type: 2}
+  powerUpMaterial: {fileID: 2100000, guid: 90f547bcd6b36d548a3d4e5403fd783d, type: 2}
+  headMarkerMaterial: {fileID: 2100000, guid: 4591c98bebdb24d4583d7222a768750d, type: 2}
+  territoryPrefab: {fileID: 1137459855221860, guid: 181b8591b48581b4593e98fd11eea2a8,
+    type: 2}
+  matchManager: {fileID: 0}
+  body: []
+  length: 5
+  powerTurns: 0
+--- !u!114 &1594805651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1594805642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0fa6d40c3b56c84db428c8e96fa6be3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  head: {fileID: 0}
+  bodyPrefab: {fileID: 0}
+  powerUpMaterial: {fileID: 0}
+  headMarkerMaterial: {fileID: 0}
+  territoryPrefab: {fileID: 0}
+  matchManager: {fileID: 0}
+  body: []
+  length: 5
+  powerTurns: 0
+  m: {fileID: 0}
+  greedymaxDepth: 0
 --- !u!1 &1649160686
 GameObject:
   m_ObjectHideFlags: 0
@@ -2192,11 +2237,11 @@ MonoBehaviour:
   territoryOn: 0
   territoryDoubleLayer: 0
   territoryPermanent: 0
-  loopGame: 0
-  player1BotType: A
-  player2BotType: B
-  mapType: 
-  player1: {fileID: 1594805643}
+  loopGame: 1
+  player1BotType: greedySearch
+  player2BotType: RL
+  mapType: basic_map
+  player1: {fileID: 1594805650}
   player2: {fileID: 1649160694}
   foodPrefab: {fileID: 1684524527812884, guid: 40d75ded267258348a60299068f95d10, type: 2}
   powerUpPrefab: {fileID: 1989851686697500, guid: c13d5fbe6e6b25d459c2589b5e587f10,

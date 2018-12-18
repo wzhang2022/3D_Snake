@@ -42,7 +42,7 @@ public abstract class Agent : MonoBehaviour {
         matchManager = managerObject.GetComponent<MatchManager>();
     }
 	
-    // process a movement command, changes the direction and direction2D variabls
+    // process a movement command, changes the direction and direction2D variables
     public void MoveCommand(Vector3 c)
     {
         // allow direction if it is not in same axis of previous move, or if no length
@@ -92,6 +92,7 @@ public abstract class Agent : MonoBehaviour {
         return head.transform.position + direction;
     }
 
+    // execute the actual move
     public void Move() {
         if (direction == Vector3.up)
         {
@@ -123,12 +124,14 @@ public abstract class Agent : MonoBehaviour {
     }
 
 
-    // recieve movement commands at every timestep
+    // recieve movement commands at every timestep (only used for human input)
     public virtual void Update()
     {
         return;
 
     }
+
+    // give valid moves that will not result in crash
    protected Vector3[] FindSafeMoves() {
         Vector3 head = this.head.transform.position;
         Vector3[] moves = new[] { Vector3.left, Vector3.right, Vector3.up, Vector3.down, Vector3.forward, Vector3.back };
@@ -155,6 +158,7 @@ public abstract class Agent : MonoBehaviour {
                pos != opponent.NextMove()); // head collisions
     }
 
+    // helper function for manhattan distance
     protected static float MDist(Vector3 a, Vector3 b) {
         return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) + Mathf.Abs(a.z - b.z);
     }
