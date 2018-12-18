@@ -98,15 +98,3 @@ map: basic_map outcome: player2_win player1: greedyMax player2: RL
 map: basic_map outcome: player2_win player1: greedyMax player2: RL
 map: basic_map outcome: player1_win player1: greedyMax player2: RL
 map: basic_map outcome: player2_win player1: greedyMax player2: RL
-map: basic_map outcome: player1_win player1: greedyMax player2: RL
-map: basic_map outcome: player2_win player1: greedyMax player2: RL
-map: basic_map outcome: player2_win player1: greedyMax player2: RL
-map: basic_map outcome: player2_win player1: greedyMax player2: RL
-map: basic_map outcome: player2_win player1: greedyMax player2: RL
-map: basic_map outcome: player2_win player1: greedyMax player2: RL
-map: basic_map outcome: player2_win player1: greedyMax player2: RL
-map: basic_map outcome: player2_win player1: greedyMax player2: RL
-map: basic_map outcome: player2_win player1: greedyMax player2: RL
-map: basic_map outcome: player2_win player1: greedyMax player2: RL
-map: basic_map outcome: player2_win player1: greedyMax player2: RL
-map: basic_map outcome: player2_win player1: greedyMax player2: RL
