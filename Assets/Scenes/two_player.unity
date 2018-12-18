@@ -2188,13 +2188,14 @@ MonoBehaviour:
   powerUpSpawnRate: 0.1
   maxPowerUp: 1
   powerUpDuration: 15
-  roundSteps: 1800
+  roundSteps: 120
   territoryOn: 0
   territoryDoubleLayer: 0
   territoryPermanent: 0
   loopGame: 0
   player1BotType: A
   player2BotType: B
+  mapType: 
   player1: {fileID: 1594805643}
   player2: {fileID: 1649160694}
   foodPrefab: {fileID: 1684524527812884, guid: 40d75ded267258348a60299068f95d10, type: 2}
