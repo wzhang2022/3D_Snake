@@ -44,6 +44,6 @@ public class StartMenu : MonoBehaviour {
     public void Play1Player()
     {
         Debug.Log("Play 1-player");
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(12);
     }
 }
