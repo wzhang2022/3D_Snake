@@ -63,6 +63,7 @@ public class SearchAgent : Agent
 
         Vector3[] moves = new[] { Vector3.left, Vector3.right, Vector3.up, Vector3.down, Vector3.forward, Vector3.back };
 
+        // use queue-based bfs to find distance to nearest goal
         HashSet<Vector3> visited = new HashSet<Vector3>();
         Queue<BFSNode> queue = new Queue<BFSNode>();
         queue.Enqueue(new BFSNode(start, 0));

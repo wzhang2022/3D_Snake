@@ -1942,17 +1942,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0fa6d40c3b56c84db428c8e96fa6be3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  head: {fileID: 0}
-  bodyPrefab: {fileID: 0}
-  powerUpMaterial: {fileID: 0}
-  headMarkerMaterial: {fileID: 0}
-  territoryPrefab: {fileID: 0}
+  head: {fileID: 1594805642}
+  bodyPrefab: {fileID: 1137459855221860, guid: 3d3eb448d5a80a04e9de33569778940d, type: 2}
+  powerUpMaterial: {fileID: 2100000, guid: 90f547bcd6b36d548a3d4e5403fd783d, type: 2}
+  headMarkerMaterial: {fileID: 2100000, guid: 4591c98bebdb24d4583d7222a768750d, type: 2}
+  territoryPrefab: {fileID: 1137459855221860, guid: 181b8591b48581b4593e98fd11eea2a8,
+    type: 2}
   matchManager: {fileID: 0}
   body: []
   length: 5
   powerTurns: 0
   m: {fileID: 0}
-  greedymaxDepth: 0
+  greedymaxDepth: 5
 --- !u!1 &1649160686
 GameObject:
   m_ObjectHideFlags: 0

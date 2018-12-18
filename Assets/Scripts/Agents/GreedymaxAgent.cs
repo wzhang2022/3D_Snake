@@ -11,7 +11,6 @@ public class GreedymaxAgent : Agent {
         // obtain reference to match manager script to access game state
         GameObject managerObject = GameObject.Find("MatchManager");
         m = managerObject.GetComponent<MatchManager>();
-        // Debug.Log(m.ToString());
     }
     public override Vector3 DecideMove(Agent otherplayer) {
         // save reference to opponent
@@ -24,7 +23,6 @@ public class GreedymaxAgent : Agent {
         Vector3 bestMove = Vector3.left;
         Vector3[] validMoves = currState.player1.ValidMoves(currState);
         foreach (Vector3 move in validMoves) {
-            //Debug.Log(move);
             GameState nextState = currState.NextState(move, Vector3.zero);
             float newVal = OpponentMoveValue(nextState, greedymaxDepth - 1);
             // tiebreak greedily - based on one move lookahead
@@ -47,6 +45,7 @@ public class GreedymaxAgent : Agent {
         }
         Vector3[] moves = state.player1.ValidMoves(state);
         float val = -Mathf.Infinity;
+        // take the move that maximizes utility when allowing opponent to move next
         foreach (Vector3 move in moves) {
             GameState nextState = state.NextState(move, Vector3.zero);
             val = Mathf.Max(val, OpponentMoveValue(nextState, depth - 1));
@@ -57,18 +56,19 @@ public class GreedymaxAgent : Agent {
     // Assume that opponent picks a move greedily, opponent is player 2
     private float OpponentMoveValue(GameState state, int depth)
     {
-        // return OurMoveValue(state, depth - 1); // testing: pretend opponent never moves
         if (depth == 0)
         {
             return Utility(state);
         }
         HashSet<Vector3> targets = new HashSet<Vector3>(state.foods);
         targets.UnionWith(state.powerups);
+        // add body as targets when powered up
         if (state.player2.powerTurns > 1)
         {
             targets.UnionWith(state.player1.bodyPositions);
             targets.Add(state.player1.headPosition);
         }
+        // find closest target
         Vector3 bestTarget = new Vector3(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity);
         Vector3 head = state.player2.headPosition;
         foreach (Vector3 target in targets)
@@ -78,6 +78,7 @@ public class GreedymaxAgent : Agent {
                 bestTarget = target;
             }
         }
+        // find move which takes us closer to closest target
         Vector3[] moves = state.player2.ValidMoves(state);
         Vector3 bestMove = Vector3.left;
         if (moves.Length > 0)
@@ -91,6 +92,7 @@ public class GreedymaxAgent : Agent {
                 bestMove = move;
             }
         }
+        // return our value of the state after opponent takes the greedy move
         GameState nextState = state.NextState(Vector3.zero, bestMove);
         return OurMoveValue(nextState, depth); ;
     }
@@ -111,7 +113,8 @@ public class GreedymaxAgent : Agent {
         float distToTarget = DistToTarget(state, state.player1);
         float powerTurnsDiff = state.player1.powerTurns - state.player2.powerTurns;
         float distBetweenPlayers = MDist(state.player1.headPosition, state.player2.headPosition);
-        return lengthDifference - distToTarget * 0.01f + powerTurnsDiff * 0.1f;// - distBetweenPlayers*0.01f;
+        // main utility is length differential, tie breaking greedily 
+        return lengthDifference - distToTarget * 0.01f + powerTurnsDiff * 0.1f;
     }
 
     private float DistToTarget(GameState state, SimplifiedAgent player) {
@@ -119,6 +122,7 @@ public class GreedymaxAgent : Agent {
         return MDist(target, player.headPosition);
     }
 
+    // find the closest target to a player
     private Vector3 FindTarget(GameState state, SimplifiedAgent player) {
         Vector3 target = new Vector3(0, 0, 0);
         Vector3 head = player.headPosition;

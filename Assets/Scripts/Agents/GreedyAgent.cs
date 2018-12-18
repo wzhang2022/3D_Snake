@@ -8,8 +8,6 @@ using UnityEngine;
 // and in it's method of evaluating and navigating to positions (decreasing manhattan distance)
 public class GreedyAgent : Agent
 {
-
-
     // identify closest goal as target
     private Vector3 FindTarget()
     {
