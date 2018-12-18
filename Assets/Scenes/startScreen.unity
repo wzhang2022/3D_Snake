@@ -3742,7 +3742,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Watch bots
+  m_Text: Watch Bots
 --- !u!222 &1878058520
 CanvasRenderer:
   m_ObjectHideFlags: 0

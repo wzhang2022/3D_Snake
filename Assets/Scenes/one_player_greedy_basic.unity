@@ -2163,11 +2163,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30dc451c8c6748b469dd85285b7d0a7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  head: {fileID: 0}
-  bodyPrefab: {fileID: 0}
-  powerUpMaterial: {fileID: 0}
-  headMarkerMaterial: {fileID: 0}
-  territoryPrefab: {fileID: 0}
+  head: {fileID: 1649160686}
+  bodyPrefab: {fileID: 1684524527812884, guid: 53ed6717eca982e4b9a703ccf22bc2dc, type: 2}
+  powerUpMaterial: {fileID: 2100000, guid: 90f547bcd6b36d548a3d4e5403fd783d, type: 2}
+  headMarkerMaterial: {fileID: 2100000, guid: 4591c98bebdb24d4583d7222a768750d, type: 2}
+  territoryPrefab: {fileID: 1684524527812884, guid: 2dde917855026324db2a1c37933bfb4a,
+    type: 2}
   matchManager: {fileID: 0}
   body: []
   length: 5
