@@ -334,7 +334,7 @@ GameObject:
   - component: {fileID: 240586954}
   - component: {fileID: 240586953}
   m_Layer: 5
-  m_Name: GreedySearch_vs_GreedyMax
+  m_Name: GreedySearch_vs_GreedyMax_cross
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1767,7 +1767,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &717650814
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2262,7 +2262,7 @@ GameObject:
   - component: {fileID: 1103150207}
   - component: {fileID: 1103150206}
   m_Layer: 5
-  m_Name: Greedy_vs_GreedySearch
+  m_Name: Greedy_vs_GreedySearch_cross
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2655,7 +2655,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1242725783
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3667,7 +3667,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: RL vs. GreedySeach
+  m_Text: RL vs. GreedySearch
 --- !u!222 &1849944662
 CanvasRenderer:
   m_ObjectHideFlags: 0
