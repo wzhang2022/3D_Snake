@@ -2300,7 +2300,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c74a3037fe3b2942a67fe1dcea14109, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeStep: 0.05
+  timeStep: 0.01
   foodSpawnRate: 0.2
   maxFood: 30
   powerUpSpawnRate: 0.1

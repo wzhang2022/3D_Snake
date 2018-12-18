@@ -239,7 +239,6 @@ public class MatchManager : MonoBehaviour
         if (player2Win || player1Win || tie)
         {
             Time.timeScale = 0;
-            //loop for trials
             if (loopGame) {
                 string outcome = "";
                 if (tie) {
@@ -272,7 +271,7 @@ public class MatchManager : MonoBehaviour
                 Debug.Log(SceneManager.GetActiveScene().buildIndex);
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
-            Time.timeScale = 1;
+            // Time.timeScale = 1;
             Debug.Log("Gameover");
             gameOverMenu.SetActive(true);
             if (tie)

@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System.IO;
+using System;
+using System.Reflection;
 
 /*
     TODO
@@ -10,14 +13,14 @@ using UnityEngine;
     are properly updated.
         2.1. Need to define what rewards are: (state.getValue() - prevState.getValue())
 */
- 
+
 public class RLAgent : Agent
 {
     public static System.Random rnd = new System.Random();
     Dictionary<string, float> weights = new Dictionary<string, float>();
 
     // learning rate, exploration rate, and discount factor
-    float alpha = 0.02f;
+    float alpha = 0.2f;
     float epsilon = 0.05f;
     float gamma = 0.8f;
 
@@ -32,6 +35,15 @@ public class RLAgent : Agent
         GameObject managerObject = GameObject.Find("MatchManager");
         m = managerObject.GetComponent<MatchManager>();
         // Debug.Log(m.ToString());
+        string fileName = "weights.txt";
+        string destPath = Path.Combine("", fileName);
+        string lastLine = File.ReadAllLines(destPath).Last();
+        string[] savedWeights = lastLine.Split(' ');
+        weights.Add("bias", float.Parse(savedWeights[0]));
+        weights.Add("closest_food", float.Parse(savedWeights[1]));
+        weights.Add("closest_pup", float.Parse(savedWeights[2]));
+        weights.Add("avoid_enemy", float.Parse(savedWeights[3]));
+        weights.Add("go_to_enemy", float.Parse(savedWeights[4]));
     }
 
     public override Vector3 DecideMove(Agent otherplayer) {
@@ -40,7 +52,17 @@ public class RLAgent : Agent
 
         // Update weights here
         if (prevState != null) {
-            float reward = (state.player1.length - state.player2.length) + (state.player1.powerTurns - prevState.player1.powerTurns);
+            // reward is change in length differentials
+            float reward = (state.player1.length - state.player2.length) - (prevState.player1.length - prevState.player2.length);
+            // certain win and loss conditions - large reward
+            if (state.player1.length <= 1)
+            {
+                reward = -100f;
+            }
+            if (state.player2.length <= 1)
+            {
+                reward = 100f;
+            }
             UpdateWeights(prevState, prevMove, state, reward);
         }
 
@@ -134,7 +156,7 @@ public class RLAgent : Agent
         // Bias
         features.Add("bias", (1.0f));
         if (!weights.ContainsKey("bias")) {
-            weights.Add("bias", -21.7f);
+            weights.Add("bias", 0f);
         }
 
         // Closest food
@@ -144,7 +166,7 @@ public class RLAgent : Agent
 
         features.Add("closest_food", (dist / 100f));
         if (!weights.ContainsKey("closest_food")) {
-            weights.Add("closest_food", -1.199f);
+            weights.Add("closest_food", 0f);
         }
         
         // Closest power-up
@@ -153,40 +175,38 @@ public class RLAgent : Agent
 
         features.Add("closest_pup", (dist / 100f) /* * ((float)state.player2.length / 10f) */);
         if (!weights.ContainsKey("closest_pup")) {
-            weights.Add("closest_pup", -1.2979f);
+            weights.Add("closest_pup", 0f);
         }
 
-        // avoid enemy if enemy has power up
+        // avoid enemy head if enemy has power up (and in range)
         target = state.player2.headPosition;
         dist = MDist(head + move, target);
-
-        if (state.player2.powerTurns > 0) {
+        if (state.player2.powerTurns > MDist(head, target)) {
             if (dist == 0f) {
                 features.Add("avoid_enemy", 1f);
             } else {
-                features.Add("avoid_enemy", (1f / dist));
+                features.Add("avoid_enemy", (dist / 100f));
             }  
         } else {
             features.Add("avoid_enemy", 0f);
         }
         
         if (!weights.ContainsKey("avoid_enemy")) {
-            weights.Add("avoid_enemy", -1.33f);
+            weights.Add("avoid_enemy", 0f);
         }
 
-        // go towards enemy if you have power up
-        /*
+        // go towards enemy body if you have power up (and in range)
         HashSet<Vector3> enemy_body = new HashSet<Vector3>(state.player2.bodyPositions);
         target = FindTarget(enemy_body);
         if (state.player1.powerTurns > MDist(head, target)) {
-            features.Add("go_to_enemy", (dist / 100f));
+            features.Add("go_to_enemy", (1f / (dist + 1)));
         } else {
             features.Add("go_to_enemy", 0f);
         }
 
         if (!weights.ContainsKey("go_to_enemy")) {
             weights.Add("go_to_enemy", 0f);
-        }*/
+        }
 
         // normalize
         foreach (var entry in features.ToList())
@@ -208,12 +228,25 @@ public class RLAgent : Agent
         foreach (KeyValuePair<string, float> kvp in features) {
             weights[kvp.Key] += alpha * difference * kvp.Value;
         }
-        
+
+        string weightsString = "";
         foreach (KeyValuePair<string, float> kvp in weights) {
             Debug.Log(string.Format("WEIGHTS: Key = {0}, Value = {1}", kvp.Key, kvp.Value));
+            //weightsString += string.Format(", {0}: {1}", kvp.Key, kvp.Value);
+            weightsString += string.Format("{1} ", kvp.Key, kvp.Value);
         }
-        foreach (KeyValuePair<string, float> kvp in features) {
+        weightsString += Environment.NewLine;
+        // print weights to file
+        string fileName = "weights.txt";
+        string destPath = Path.Combine("", fileName);
+        if (!File.Exists(destPath))
+        {
+            var myFile = File.Create(destPath);
+            myFile.Close();
+        }
+        File.AppendAllText(destPath, weightsString);
+        /*foreach (KeyValuePair<string, float> kvp in features) {
             Debug.Log(string.Format("FEATURES: Key = {0}, Value = {1}", kvp.Key, kvp.Value));
-        }
+        }*/
     }
 }
