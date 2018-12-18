@@ -26,7 +26,7 @@ public class MatchManager : MonoBehaviour
     public bool loopGame = false;
     public string player1BotType;
     public string player2BotType;
-    private int trialNumber = 0;
+    public string mapType;
 
     // player controllers - note can generalize into array if we do multiplayer
     public Agent player1;
@@ -239,6 +239,7 @@ public class MatchManager : MonoBehaviour
         if (player2Win || player1Win || tie)
         {
             Time.timeScale = 0;
+            //loop for trials
             if (loopGame) {
                 string outcome = "";
                 if (tie) {
@@ -246,16 +247,19 @@ public class MatchManager : MonoBehaviour
                     outcome = "Tie";
                 }
                 if (player1Win) {
-                    outcome = "player1 win";
+                    outcome = "player1_win";
                     Debug.Log("Player1 win");
                 }
                 if (player2Win) {
-                    outcome = "player2 win";
+                    outcome = "player2_win";
                     Debug.Log("Player2 win");
                 }
-                trialNumber++;
-                string outMessage = "Result is " + outcome + " and player1 is " + player1BotType + " and player2 is " + player2BotType + Environment.NewLine;
-                string fileName = player1BotType + "_vs_" + player2BotType + ".txt";
+                string outMessage = "map: " + mapType + 
+                    " outcome: " + outcome + 
+                    " player1: " + player1BotType + 
+                    " player2: " + player2BotType + 
+                    Environment.NewLine;
+                string fileName = mapType + "_" + player1BotType + "_vs_" + player2BotType + ".txt";
                 Debug.Log(fileName);
                 string destPath = Path.Combine("", fileName);
                 Debug.Log(outMessage);
@@ -268,7 +272,7 @@ public class MatchManager : MonoBehaviour
                 Debug.Log(SceneManager.GetActiveScene().buildIndex);
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
-            // Time.timeScale = 1;
+            Time.timeScale = 1;
             Debug.Log("Gameover");
             gameOverMenu.SetActive(true);
             if (tie)

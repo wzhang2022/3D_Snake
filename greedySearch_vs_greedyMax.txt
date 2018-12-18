@@ -1,4 +1,0 @@
-Result is player1 win and player1 is greedySearch and player2 is greedyMax
-Result is player2 win and player1 is greedySearch and player2 is greedyMax
-Result is player1 win and player1 is greedySearch and player2 is greedyMax
-Result is player2 win and player1 is greedySearch and player2 is greedyMax
