@@ -98,6 +98,3 @@ map: cross_map outcome: player1_win player1: greedy player2: expectimax
 map: cross_map outcome: player1_win player1: greedy player2: expectimax
 map: cross_map outcome: player1_win player1: greedy player2: expectimax
 map: cross_map outcome: player1_win player1: greedy player2: expectimax
-map: cross_map outcome: player1_win player1: greedy player2: expectimax
-map: cross_map outcome: player1_win player1: greedy player2: expectimax
-map: cross_map outcome: player2_win player1: greedy player2: expectimax
