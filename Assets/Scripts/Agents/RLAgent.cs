@@ -19,9 +19,11 @@ public class RLAgent : Agent
     public static System.Random rnd = new System.Random();
     Dictionary<string, float> weights = new Dictionary<string, float>();
 
-    // learning rate, exploration rate, and discount factor
+    // learning rate
     float alpha = 0.1f;
+    //exploration rate (0 for when it's trained)
     float epsilon = 0; // 0.05f;
+    // discount factor
     float gamma = 0.9f;
 
     public MatchManager m;
@@ -29,7 +31,6 @@ public class RLAgent : Agent
     GameState prevState = null;
     Vector3 prevMove = new Vector3(0, 0, 0);
 
-    // Look into this later
     public void Start() {
         // obtain reference to match manager script to access game state
         GameObject managerObject = GameObject.Find("MatchManager");
@@ -57,14 +58,14 @@ public class RLAgent : Agent
     }
 
     public override Vector3 DecideMove(Agent otherplayer) {
-        // this agent will visualize itself as player 1 always
+        // This agent will visualize itself as player 1 always
         GameState state = new GameState(m.wallPositions, m.powerUpPositions, m.foodPositions, this, otherplayer);
 
-        // Update weights here
+        // Update weights after each move (when training)
         if (prevState != null) {
             // reward is change in length differentials
             float reward = (state.player1.length - state.player2.length) - (prevState.player1.length - prevState.player2.length);
-            // certain win and loss conditions - large reward
+            // certain win and loss conditions - large reward/punishment
             if (state.player1.length <= 1)
             {
                 reward = -100f;
@@ -78,20 +79,24 @@ public class RLAgent : Agent
 
         Vector3[] validMoves = state.player1.ValidMoves(state);
 
-        // with prob epsilon, pick a random valid move
+        // with probability epsilon, pick a random valid move
         Vector3 move = new Vector3(0, 0, 0);
         if ((float)rnd.NextDouble() < epsilon) {
             int r = rnd.Next(validMoves.Length);
             move = validMoves[r];
         } else {
+            // else pick the best one
             move = GetActionFromQValues(state);
         }
 
+        // Record (state, action) pairs for reward
         prevMove = move;
         prevState = state;
+
         return move;
     }
 
+    // Find the best Q-Value of a state over all actions
     private float GetValueFromQValues(GameState state) {
         Vector3[] validMoves = state.player1.ValidMoves(state);
         float best_value = -Mathf.Infinity;
@@ -104,6 +109,8 @@ public class RLAgent : Agent
 
         return best_value;
     }
+
+    // Find the best action from a state
     private Vector3 GetActionFromQValues(GameState state) {
         Vector3[] validMoves = state.player1.ValidMoves(state);
         List<Vector3> bestMoves = new List<Vector3>();
@@ -121,6 +128,7 @@ public class RLAgent : Agent
         return bestMoves[r];
     }
 
+    // Q-Value in Feature-Based Q-learning is dot product of weights and features
     private float EvaluateQValue(GameState state, Vector3 move) {
         float q_value = 0;
         Dictionary<string, float> features = GetFeatures(state, move);
@@ -132,7 +140,7 @@ public class RLAgent : Agent
         return q_value;
     }
 
-    // straight from Greedy Agent
+    // Find the closest target inside of a set of goals
     private Vector3 FindTarget(HashSet<Vector3> goals)
     {
         Vector3 target = new Vector3(0, 0, 0);
@@ -148,6 +156,7 @@ public class RLAgent : Agent
         return target;
     }
 
+    // Get the features of any (state, action) pair
     private Dictionary<string, float> GetFeatures(GameState state, Vector3 move) {
         /*
             Features of a state after a move:
@@ -241,11 +250,12 @@ public class RLAgent : Agent
         return features;
     }
 
+    // Update all weights
     private void UpdateWeights(GameState state, Vector3 move, GameState nextState, float reward) {
         // Lecture 11 Slide 16
-        Debug.Log("====================");
-        Debug.Log(string.Format("Best Q-Value of Next state: {0}", GetValueFromQValues(nextState)));
-        Debug.Log(string.Format("QValue of this action: {0}", EvaluateQValue(state, move)));
+        //Debug.Log("====================");
+        //Debug.Log(string.Format("Best Q-Value of Next state: {0}", GetValueFromQValues(nextState)));
+        //Debug.Log(string.Format("QValue of this action: {0}", EvaluateQValue(state, move)));
         float difference = (reward + gamma * GetValueFromQValues(nextState)) - EvaluateQValue(state, move);
 
         Dictionary<string, float> features = GetFeatures(state, move);
@@ -260,7 +270,7 @@ public class RLAgent : Agent
         // write weights to file
         string weightsString = "";
         foreach (KeyValuePair<string, float> kvp in weights) {
-            Debug.Log(string.Format("WEIGHTS: Key = {0}, Value = {1}", kvp.Key, kvp.Value));
+            //Debug.Log(string.Format("WEIGHTS: Key = {0}, Value = {1}", kvp.Key, kvp.Value));
             //weightsString += string.Format(", {0}: {1}", kvp.Key, kvp.Value);
             weightsString += string.Format("{1} ", kvp.Key, kvp.Value);
         }
@@ -274,6 +284,7 @@ public class RLAgent : Agent
             myFile.Close();
         }
         File.AppendAllText(destPath, weightsString);
+        
         /*foreach (KeyValuePair<string, float> kvp in features) {
             Debug.Log(string.Format("FEATURES: Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }*/
