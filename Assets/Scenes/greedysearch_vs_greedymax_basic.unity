@@ -2328,11 +2328,11 @@ MonoBehaviour:
   powerUpSpawnRate: 0.1
   maxPowerUp: 1
   powerUpDuration: 15
-  roundSteps: 80
+  roundSteps: 120
   territoryOn: 0
   territoryDoubleLayer: 0
   territoryPermanent: 0
-  loopGame: 1
+  loopGame: 0
   player1BotType: greedySearch
   player2BotType: greedyMax
   mapType: basic_map

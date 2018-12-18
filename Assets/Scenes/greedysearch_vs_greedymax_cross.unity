@@ -1084,9 +1084,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1120708751}
+  - component: {fileID: 1120708754}
   - component: {fileID: 1120708752}
   - component: {fileID: 1120708753}
-  - component: {fileID: 1120708754}
   m_Layer: 0
   m_Name: Map
   m_TagString: Untagged
@@ -1117,7 +1117,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1120708750}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c2788a4f120444f45a91561753686eb0, type: 3}
   m_Name: 
@@ -1149,7 +1149,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1120708750}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: faa74fa5050b35b49852598a30e65b4e, type: 3}
   m_Name: 
@@ -2332,7 +2332,7 @@ MonoBehaviour:
   territoryOn: 0
   territoryDoubleLayer: 0
   territoryPermanent: 0
-  loopGame: 1
+  loopGame: 0
   player1BotType: greedySearch
   player2BotType: greedyMax
   mapType: cross_map
@@ -2346,7 +2346,7 @@ MonoBehaviour:
   player1WinsText: {fileID: 1521604295}
   player2WinsText: {fileID: 760211610}
   tieText: {fileID: 364699315}
-  map: {fileID: 1120708752}
+  map: {fileID: 1120708754}
 --- !u!4 &1891107136
 Transform:
   m_ObjectHideFlags: 0

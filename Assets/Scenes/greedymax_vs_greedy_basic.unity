@@ -2332,7 +2332,7 @@ MonoBehaviour:
   territoryOn: 0
   territoryDoubleLayer: 0
   territoryPermanent: 0
-  loopGame: 1
+  loopGame: 0
   player1BotType: greedy
   player2BotType: greedymax
   mapType: basic_map
