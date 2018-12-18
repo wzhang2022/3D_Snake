@@ -399,7 +399,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 574604545}
-        m_MethodName: Play2Player
+        m_MethodName: WatchGreedySearch_GreedyMax_Cross
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -759,7 +759,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 574604545}
-        m_MethodName: Play2Player
+        m_MethodName: WatchGreedy_GreedySearch_Basic
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -882,7 +882,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 574604545}
-        m_MethodName: Play2Player
+        m_MethodName: WatchGreedySearch_GreedyMax_Basic
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1385,7 +1385,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 574604545}
-        m_MethodName: Play2Player
+        m_MethodName: WatchGreedy_GreedyMax_Basic
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1508,7 +1508,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 574604545}
-        m_MethodName: Play2Player
+        m_MethodName: WatchGreedy_Expectimax_Basic
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1706,7 +1706,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 574604545}
-        m_MethodName: Play2Player
+        m_MethodName: WatchRL_GreedyMax_Basic
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1767,7 +1767,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &717650814
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2327,7 +2327,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 574604545}
-        m_MethodName: Play2Player
+        m_MethodName: WatchGreedy_GreedySearch_Cross
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2655,7 +2655,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1242725783
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3413,7 +3413,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 574604545}
-        m_MethodName: Play2Player
+        m_MethodName: WatchRL_Greedy_Basic
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3827,7 +3827,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 574604545}
-        m_MethodName: Play2Player
+        m_MethodName: WatchRL_GreedySearch_Basic
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3950,7 +3950,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 574604545}
-        m_MethodName: Play2Player
+        m_MethodName: WatchReflex_Expectimax_Basic
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
