@@ -1776,9 +1776,9 @@ GameObject:
   - component: {fileID: 1594805645}
   - component: {fileID: 1594805644}
   - component: {fileID: 1594805648}
-  - component: {fileID: 1594805651}
   - component: {fileID: 1594805643}
   - component: {fileID: 1594805649}
+  - component: {fileID: 1594805651}
   - component: {fileID: 1594805650}
   m_Layer: 0
   m_Name: Player1_head
@@ -1793,7 +1793,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1594805642}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30dc451c8c6748b469dd85285b7d0a7d, type: 3}
   m_Name: 
@@ -1897,7 +1897,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1594805642}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 470e9995399b2f5429260b6d796fbdd7, type: 3}
   m_Name: 
@@ -1947,7 +1947,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1594805642}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55f5f046c2d8ec9419c03a18a9d4a761, type: 3}
   m_Name: 
@@ -1989,8 +1989,8 @@ GameObject:
   - component: {fileID: 1649160688}
   - component: {fileID: 1649160691}
   - component: {fileID: 1649160692}
-  - component: {fileID: 1649160696}
   - component: {fileID: 1649160697}
+  - component: {fileID: 1649160696}
   - component: {fileID: 1649160695}
   - component: {fileID: 1649160687}
   - component: {fileID: 1649160694}
@@ -2183,7 +2183,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1649160686}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5e0a9b636cab8224ca88f7160e54ed44, type: 3}
   m_Name: 
@@ -2205,7 +2205,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1649160686}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c0fa6d40c3b56c84db428c8e96fa6be3, type: 3}
   m_Name: 
@@ -2333,11 +2333,11 @@ MonoBehaviour:
   territoryDoubleLayer: 0
   territoryPermanent: 0
   loopGame: 0
-  player1BotType: reflex
-  player2BotType: expectimax
-  mapType: basic
-  player1: {fileID: 1594805651}
-  player2: {fileID: 1649160696}
+  player1BotType: greedy
+  player2BotType: greedymax
+  mapType: basic_map
+  player1: {fileID: 1594805643}
+  player2: {fileID: 1649160697}
   foodPrefab: {fileID: 1684524527812884, guid: 40d75ded267258348a60299068f95d10, type: 2}
   powerUpPrefab: {fileID: 1989851686697500, guid: c13d5fbe6e6b25d459c2589b5e587f10,
     type: 2}
@@ -2366,14 +2366,14 @@ AudioSource:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1891107134}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 93d919e92d20cc04e828eb6b0b2c4d09, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0

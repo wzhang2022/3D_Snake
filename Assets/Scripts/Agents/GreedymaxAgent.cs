@@ -4,13 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GreedymaxAgent : Agent {
-    public MatchManager m;
+    private MatchManager m;
     public int greedymaxDepth = 0;
 
     public void Start() {
         // obtain reference to match manager script to access game state
-        GameObject managerObject = GameObject.Find("MatchManager");
-        m = managerObject.GetComponent<MatchManager>();
+        m = matchManager;
     }
     public override Vector3 DecideMove(Agent otherplayer) {
         // save reference to opponent
@@ -112,7 +111,7 @@ public class GreedymaxAgent : Agent {
         float lengthDifference = state.player1.length - state.player2.length;
         float distToTarget = DistToTarget(state, state.player1);
         float powerTurnsDiff = state.player1.powerTurns - state.player2.powerTurns;
-        float distBetweenPlayers = MDist(state.player1.headPosition, state.player2.headPosition);
+        //float distBetweenPlayers = MDist(state.player1.headPosition, state.player2.headPosition);
         // main utility is length differential, tie breaking greedily 
         return lengthDifference - distToTarget * 0.01f + powerTurnsDiff * 0.1f;
     }

@@ -1084,9 +1084,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1120708751}
-  - component: {fileID: 1120708754}
   - component: {fileID: 1120708752}
   - component: {fileID: 1120708753}
+  - component: {fileID: 1120708754}
   m_Layer: 0
   m_Name: Map
   m_TagString: Untagged
@@ -1117,7 +1117,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1120708750}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c2788a4f120444f45a91561753686eb0, type: 3}
   m_Name: 
@@ -1149,7 +1149,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1120708750}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: faa74fa5050b35b49852598a30e65b4e, type: 3}
   m_Name: 
@@ -1776,10 +1776,10 @@ GameObject:
   - component: {fileID: 1594805645}
   - component: {fileID: 1594805644}
   - component: {fileID: 1594805648}
-  - component: {fileID: 1594805650}
+  - component: {fileID: 1594805651}
   - component: {fileID: 1594805643}
   - component: {fileID: 1594805649}
-  - component: {fileID: 1594805651}
+  - component: {fileID: 1594805650}
   m_Layer: 0
   m_Name: Player1_head
   m_TagString: Untagged
@@ -1926,7 +1926,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1594805642}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4bb9a33378003d4478fd44ea6e28a647, type: 3}
   m_Name: 
@@ -1989,8 +1989,8 @@ GameObject:
   - component: {fileID: 1649160688}
   - component: {fileID: 1649160691}
   - component: {fileID: 1649160692}
-  - component: {fileID: 1649160697}
   - component: {fileID: 1649160696}
+  - component: {fileID: 1649160697}
   - component: {fileID: 1649160695}
   - component: {fileID: 1649160687}
   - component: {fileID: 1649160694}
@@ -2205,7 +2205,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1649160686}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c0fa6d40c3b56c84db428c8e96fa6be3, type: 3}
   m_Name: 
@@ -2333,11 +2333,11 @@ MonoBehaviour:
   territoryDoubleLayer: 0
   territoryPermanent: 0
   loopGame: 0
-  player1BotType: greedySearch
-  player2BotType: greedyMax
-  mapType: cross_map
-  player1: {fileID: 1594805650}
-  player2: {fileID: 1649160697}
+  player1BotType: reflex
+  player2BotType: expectimax
+  mapType: basic
+  player1: {fileID: 1594805651}
+  player2: {fileID: 1649160696}
   foodPrefab: {fileID: 1684524527812884, guid: 40d75ded267258348a60299068f95d10, type: 2}
   powerUpPrefab: {fileID: 1989851686697500, guid: c13d5fbe6e6b25d459c2589b5e587f10,
     type: 2}
@@ -2346,7 +2346,7 @@ MonoBehaviour:
   player1WinsText: {fileID: 1521604295}
   player2WinsText: {fileID: 760211610}
   tieText: {fileID: 364699315}
-  map: {fileID: 1120708754}
+  map: {fileID: 1120708752}
 --- !u!4 &1891107136
 Transform:
   m_ObjectHideFlags: 0
@@ -2366,14 +2366,14 @@ AudioSource:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1891107134}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 93d919e92d20cc04e828eb6b0b2c4d09, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -2424,7 +2424,7 @@ AudioSource:
       outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   spreadCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -2454,7 +2454,7 @@ AudioSource:
       outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
 --- !u!1 &1995667020
 GameObject:
   m_ObjectHideFlags: 0

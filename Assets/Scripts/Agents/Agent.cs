@@ -33,7 +33,7 @@ public abstract class Agent : MonoBehaviour {
     // reference to opponent
     protected Agent opponent;
 
-    void Start () {
+    void OnEnable () {
         direction2D = direction;
         body = new List<GameObject>();
    

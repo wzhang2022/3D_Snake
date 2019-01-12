@@ -14,6 +14,7 @@ public class GreedyAgent : Agent
         Vector3 target = new Vector3(0, 0, 0);
         Vector3 head = this.head.transform.position;
         // food and powerups are goals
+        Debug.Log(matchManager);
         HashSet<Vector3> goals = new HashSet<Vector3>(matchManager.foodPositions);
         goals.UnionWith(matchManager.powerUpPositions);
         // if currently powered up, so is the other player's body

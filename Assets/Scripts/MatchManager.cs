@@ -58,10 +58,40 @@ public class MatchManager : MonoBehaviour
         gameOverMenu.SetActive(false);
         // Get wall positions
         wallPositions = map.GetWallPositions();
-
+        SetAgentTypes(player1BotType, player2BotType);
         player1.positions.Add(player1.head.transform.position);
         player2.positions.Add(player2.head.transform.position);
         StartCoroutine(RoundTimer());
+    }
+
+    private void SetAgentTypes(string player1BotType, string player2BotType) {
+        GameObject player1object = GameObject.Find("Player1_head");
+        GameObject player2object = GameObject.Find("Player2_head");
+        player1 = GetAgentFromObject(player1object, player1BotType);
+        player2 = GetAgentFromObject(player2object, player2BotType);
+        GameObject map = GameObject.Find("Map");
+    }
+
+    private Agent GetAgentFromObject(GameObject playerobject, string botType) {
+        Agent[] agents = playerobject.GetComponents<Agent>();
+        Debug.Log(agents.Length);
+        foreach (Agent agent in agents) {
+            agent.enabled = false;
+            string agentName = agent.GetType().ToString();
+            Debug.Log(agentName);
+            bool greedy = (agentName == "GreedyAgent" && botType.ToLower() == "greedy");
+            bool expectimax = (agentName == "ExpectimaxAgent" && botType.ToLower() == "expectimax");
+            bool greedymax = (agentName == "GreedymaxAgent" && botType.ToLower() == "greedymax");
+            bool RL = (agentName == "RLAgent" && botType.ToLower() == "rl");
+            bool search = (agentName == "SearchAgent" && botType.ToLower() == "greedysearch");
+            bool reflex = (agentName == "ReflexAgent" && botType.ToLower() == "reflex");
+            if (greedy || expectimax || greedymax || RL || search || reflex) {
+                agent.enabled = true;
+                return agent;
+            }
+        }
+        Debug.LogError("No agent exists in inspector");
+        return null;
     }
 
     IEnumerator RoundTimer()
