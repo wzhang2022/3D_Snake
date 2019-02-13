@@ -79,13 +79,14 @@ public class MatchManager : MonoBehaviour
             agent.enabled = false;
             string agentName = agent.GetType().ToString();
             Debug.Log(agentName);
+            bool keyboard = (agentName == "KeyboardAgent" && botType.ToLower() == "keyboard");
             bool greedy = (agentName == "GreedyAgent" && botType.ToLower() == "greedy");
             bool expectimax = (agentName == "ExpectimaxAgent" && botType.ToLower() == "expectimax");
             bool greedymax = (agentName == "GreedymaxAgent" && botType.ToLower() == "greedymax");
             bool RL = (agentName == "RLAgent" && botType.ToLower() == "rl");
             bool search = (agentName == "SearchAgent" && botType.ToLower() == "greedysearch");
             bool reflex = (agentName == "ReflexAgent" && botType.ToLower() == "reflex");
-            if (greedy || expectimax || greedymax || RL || search || reflex) {
+            if (keyboard || greedy || expectimax || greedymax || RL || search || reflex) {
                 agent.enabled = true;
                 return agent;
             }
